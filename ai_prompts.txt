@@ -1,0 +1,1 @@
+optimize to make this take the less amount of space in order to make the file as light as possible. The generated code can be less optimized or speed efficient as long as it takes less characters and as long as the logic remains exactly the same

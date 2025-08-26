@@ -1,0 +1,155 @@
+:root {
+    font-size: 8em;
+    --black: #0f1939;
+    --white: #fdfbdf;
+}
+
+* {
+    margin: 0;
+}
+
+body {
+    background: 
+        radial-gradient(circle at top left, #e3aa8764, transparent 50%),
+        radial-gradient(circle at top right, #e3aa8764, transparent 50%),
+        radial-gradient(#37457b, var(--black));
+    display: flex;
+    width: 100dvw;
+    height: 100dvh;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.grid {
+    display: grid;
+    place-items: center;
+    transform:  perspective(700px) rotateX(50deg) rotateZ(0deg) translate3d(0rem, -0rem, 0rem);
+    transform-style: preserve-3d;
+}
+
+
+/* Common */
+
+.sprite {
+    --rotationZ: 0;
+    --rotationX: 0;
+    --sprite-z-offset: 0rem;
+    --sprite-y-offset: 0rem;
+
+    image-rendering: pixelated;
+    animation: apparition 1s ease-out;
+    transition: all 0.3s ease-in-out;
+    transform-origin: center bottom;
+    transform:
+        translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+        rotateZ(var(--rotationZ))
+        rotateX(var(--rotationX));
+}
+
+@keyframes apparition {
+    0% {
+        opacity: 0;
+        transform:
+            translate3d(0, var(--sprite-y-offset), calc(var(--sprite-z-offset) + 5rem))
+            rotateZ(var(--rotationZ))
+            rotateX(var(--rotationX));
+    }
+    100% {
+        opacity: 1;
+        transform:
+            translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+            rotateZ(var(--rotationZ))
+            rotateX(var(--rotationX));
+    }
+}
+
+@keyframes joy-dance {
+    0%, 100% {
+        transform:
+            translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+            rotateZ(var(--rotationZ))
+            rotateX(var(--rotationX))
+            skewX(-10deg);
+    }
+    50% {
+        transform:
+            translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+            rotateZ(var(--rotationZ))
+            rotateX(var(--rotationX))
+            skewX(10deg);
+    }
+}
+
+
+/* TILES BASE */
+
+.nonwalkable {
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--black);
+}
+
+.walkable {
+    width: 1rem;
+    height: 1rem;
+    /* background-color: var(--white); */
+    background: url("/tiles/floor.webp");
+    background-size: cover;
+    image-rendering: pixelated;
+    
+    z-index: -10;
+}
+
+/* OBJS */
+
+.obj {
+    width: 1rem;
+    height: 1rem;
+    z-index: 10;
+    background-image: url("/objects/objects.webp");
+    background-size: 4rem;
+}
+
+.obj-paint {
+    background-position: 0rem 1rem;
+}
+
+.obj-yarn {
+    background-position: -3rem 1rem;
+}
+
+.obj-soap {
+    background-position: -2rem 1rem;
+}
+
+.obj-puddle {
+    background-position: -1rem 1rem;
+}
+
+.obj-bucket {
+    background-position: -0rem 2rem;
+}
+
+
+/* ENTITIES */
+
+.entity-cat {
+    width: 1rem;
+    height: 1rem;
+    background-image: url("/entities/cat.webp");
+    position: relative;
+    background-size: 3rem;
+    background-position: bottom left 0%;
+    image-rendering: pixelated;
+    z-index: 20;
+    /* transform:
+        translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+        translate(0rem, 0rem)
+        rotateZ(var(--rotationZ))
+        rotateX(var(--rotationX)) */
+        /* translate3d(0rem, 0rem, 0rem); */
+        /* translate(2rem, 0rem); */
+}
