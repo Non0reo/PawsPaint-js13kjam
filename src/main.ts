@@ -1,105 +1,7 @@
-import { Base, Entity, TileObject } from "./tile";
-import type { ElementData, GridPattern, Position, Tile } from "./types";
-import { RADIUS } from "./constants";
-import type { Grid } from "./grid-types";
-
-class GridObject implements Grid {
-    public p: number[][];
-    public base: Base[] = [];
-    public objects: TileObject[] = [];
-    public entities: Entity[] = [];
-    public gridElement: HTMLElement;
-
-    get w() {
-        return Math.max(...this.p.map(a=>a.length));
-    }
-
-    get h() {
-        return this.p.length;
-    }
-
-    constructor(p: GridPattern, parentElement: HTMLElement) {
-        this.p = p;
-        this.p.forEach(e => {
-            const added = Array(this.w - e.length).fill(0);
-            e.push(...added);
-        });
-
-        this.gridElement = parentElement.appendChild(document.createElement('div'));
-        this.gridElement.classList.add('grid');
-        this.gridElement.style.gridTemplate = `repeat(${this.h}, 1rem) / repeat(${this.w}, 1rem)`;
-
-        for (let y = 0; y < this.h; y++) {
-            for (let x = 0; x < this.w; x++) {
-                const dataSliced = `${this.p[y][x]}`.split('.');
-                while (dataSliced.length < 3) dataSliced.push('0');
-
-                let elInfo: ElementData[] = [];
-                dataSliced.forEach(element => {
-                    elInfo.push({
-                        all: element || null,
-                        type: parseInt(element) || 0,
-                        data: element.replace(/[^a-zA-Z]/g, '') || null,
-                        isEmpty: element === '0' || element === '' ? true : false,
-                    });
-                });
-
-                this.base.push(new Base({x, y}, elInfo[0], this))
-                this.objects.push(new TileObject({x, y}, elInfo[1], this))
-
-                if(elInfo[2].isEmpty) continue;
-                this.entities.push(new Entity({x, y}, elInfo[2], this));
-            }
-        }
-        
-    }
-
-    tile(pos: Position): Tile | null {
-        const match = (arr: { pos: Position }[]) =>
-            arr.find(e => e.pos.x === pos.x && e.pos.y === pos.y) ?? null;
-
-        const base = match(this.base);
-        const obj = match(this.objects);
-        const entity = match(this.entities);
-
-        if (!base && !obj && !entity) return null;
-
-        return {
-            pos,
-            base,
-            obj,
-            entity,
-            isTile: true
-        } as Tile;
-    }
-
-    loadGrid() {
-        if(this.gridElement === null) return;
-        this.gridElement.innerHTML = '';
-
-        let counter = 0;
-        for (let y = 0; y < this.h; y++) {
-            for (let x = 0; x < this.w; x++) {
-                const t = this.tile({x, y});
-                if(t === null) continue;
-
-                setTimeout(() => {
-                    t.base?.spawnTileBase();
-                    setTimeout(() => {
-                        t.obj?.spawnTileObject();
-                        t.entity?.spawnEntity();
-                    }, 500);
-                }, 100 * counter);
-
-                counter++;
-            }
-        }
-    }
-
-    dispose() {
-        this.gridElement?.remove();
-    }
-}
+import { Cat } from "./tiles/entities/cat";
+import { Soap } from "./tiles/objects/soap";
+import { GridObject } from "./grid";
+import type { Position } from "./types";
 
 
     
@@ -109,11 +11,17 @@ class GridObject implements Grid {
     [0, 1, 0, 1, 1.2]
 ]); */
 
-let gridObject = new GridObject([
-    ['1.0.1U', 1.1, '1.0.1U', 1, 1.3],
+/* let gridObject = new GridObject([
+    ['1.1R.1', 1.0, '1.0.1U', 1, 1.3],
     [0, 1, 1.4, 0, 1, '1.0.1U'],
     [0, '1.0.1U', 0, '1.0.1U', 1.2]
-], document.querySelector('#game') ?? document.body);
+], document.querySelector('#game') ?? document.body); */
+
+let gridObject = new GridObject([
+    ['1.1R.1', '1.1R.1', 1, 1, 1.3],
+    [0, 1, 1.4, 0, 1, 1],
+    [0, 1, 0, 1, 1.2]
+], document.querySelector('#game')!);
 
 /* let gridObject = new GridObject([
     ['1.0.1U', 1.1, '1.0.1U', 1, 1.3],
@@ -138,9 +46,14 @@ let gameKeys = {
 
 //Events
 window.addEventListener('keydown', (e) => {
-    console.log(e.key);
+    if(e.key === ' ') {
+        
+        const soap = gridObject.objects.find(en => en instanceof Soap) as Soap | undefined;
+        console.log(soap, gridObject.objects)
+        soap?.moveTo({x: 1, y: -5}, true);
+        return;
+    }
 
-    //get direction from key
     let dir: string | null = null;
     Object.entries(gameKeys).forEach(([key, value]) => {
         if(value.includes(e.key)) dir = key;
@@ -148,17 +61,34 @@ window.addEventListener('keydown', (e) => {
     if(dir === null) return;
     console.log(dir);
 
-    for (const entities of gridObject.entities) {
-        if(dir === 'up') entities.moveTo({x: entities.pos.x, y: entities.pos.y - 1});
-        if(dir === 'down') entities.moveTo({x: entities.pos.x, y: entities.pos.y + 1});
-        if(dir === 'left') entities.moveTo({x: entities.pos.x - 1, y: entities.pos.y});
-        if(dir === 'right') entities.moveTo({x: entities.pos.x + 1, y: entities.pos.y});
-        
+    for (const entity of gridObject.entities) {
+        if(entity instanceof Cat) {
+            switch (dir) {
+                case 'up': entity.moveCat({x: 0, y: -1}); break;
+                case 'down': entity.moveCat({x: 0, y: 1}); break;
+                case 'left': entity.moveCat({x: -1, y: 0}); break;
+                case 'right': entity.moveCat({x: 1, y: 0}); break;
+            }
+        }
     }
 });
 
+window.addEventListener('mousemove', (e) => {
+    const mousePos: Position = {
+        x: (e.clientX / e.view!.innerWidth) - 0.5,
+        y: (e.clientY / e.view!.innerHeight) - 0.5
+    }
 
-function update() {
+    console.log(mousePos, gridObject.gridElement);
+    gridObject.gridElement.style.transform = `perspective(700px) rotateX(${mousePos.y * 20 + 50}deg) rotateZ(${mousePos.x * 20}deg) translate3d(0rem, -0rem, 0rem)`;
+});
+
+window.addEventListener('mouseout', () => {
+    gridObject.gridElement.style.transform = `perspective(700px) rotateX(50deg) rotateZ(0deg) translate3d(0rem, -0rem, 0rem)`;
+});
+
+
+/* function update() {
     requestAnimationFrame(update);
 
     for (const entities of gridObject.entities) {
@@ -166,8 +96,4 @@ function update() {
     }
         
 }
-requestAnimationFrame(update);
-
-
-
-export { GridObject, RADIUS };
+requestAnimationFrame(update); */

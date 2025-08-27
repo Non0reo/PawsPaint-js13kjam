@@ -26,6 +26,7 @@ body {
 .grid {
     display: grid;
     place-items: center;
+    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
     transform:  perspective(700px) rotateX(50deg) rotateZ(0deg) translate3d(0rem, -0rem, 0rem);
     transform-style: preserve-3d;
 }
@@ -40,13 +41,16 @@ body {
     --sprite-y-offset: 0rem;
 
     image-rendering: pixelated;
-    animation: apparition 1s ease-out;
     transition: all 0.3s ease-in-out;
     transform-origin: center bottom;
     transform:
         translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
         rotateZ(var(--rotationZ))
         rotateX(var(--rotationX));
+}
+
+.sprite.drop-animation {
+    animation: apparition 1s ease-out;
 }
 
 @keyframes apparition {
