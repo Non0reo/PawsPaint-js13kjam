@@ -1,4 +1,4 @@
-import type { Grid } from "../../grid-types";
+import type { Grid } from "../../game/grid-types";
 import type { ElementData, Position } from "../../types";
 import { TileObject } from "./core-object";
 

@@ -1,5 +1,5 @@
-import type { Grid } from "./grid-types";
-import type { ElementData, Position } from "./types";
+import type { Grid } from "../game/grid-types";
+import type { ElementData, Position } from "../types";
 
 class Sprite {
     pos: Position;
@@ -73,29 +73,32 @@ class Sprite {
         ) return;
 
         this.moving = true;
+
+        this.div.style.transition = 'none';
+        this.div.style.transform = `
+            translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+            translate(${this.pos.x - newPos.x}rem, ${this.pos.y - newPos.y}rem)
+            rotateZ(var(--rotationZ))
+            rotateX(var(--rotationX))`;
+        void this.div.offsetWidth;
+        this.div.style.transition = 'all 0.3s ease-in-out';
+
+       
+        this.pos = newPos;
+        this.div.style.gridArea = `${this.pos.y + 1} / ${this.pos.x + 1}`;
         this.div.style.setProperty(
             "--rotationZ", 
             this.billboard ? Math.atan2(this.pos.x + this.cameraPos.x, this.pos.y + this.cameraPos.y) + 'rad' : '0'
         );
-
         this.div.style.transform = `
             translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-            translate(${newPos.x - this.pos.x}rem, ${newPos.y - this.pos.y}rem)
+            translate(0rem, 0rem)
             rotateZ(var(--rotationZ))
             rotateX(var(--rotationX))`;
 
-        this.pos = newPos;
         this.actionWhenMoving();
 
         setTimeout(() => {
-            this.div.style.transition = 'none';
-            this.div.style.gridArea = `${this.pos.y + 1} / ${this.pos.x + 1}`;
-            this.div.style.transform = `
-                translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-                rotateZ(var(--rotationZ))
-                rotateX(var(--rotationX))`;
-            void this.div.offsetWidth;
-            this.div.style.transition = 'all 0.3s ease-in-out';
             this.moving = false;
             this.hasChanegedPosition();
         }, 300);

@@ -1,6 +1,6 @@
 import { Cat } from "./tiles/entities/cat";
 import { Soap } from "./tiles/objects/soap";
-import { GridObject } from "./grid";
+import { GridObject } from "./game/grid";
 import type { Position } from "./types";
 
 
@@ -79,7 +79,6 @@ window.addEventListener('mousemove', (e) => {
         y: (e.clientY / e.view!.innerHeight) - 0.5
     }
 
-    console.log(mousePos, gridObject.gridElement);
     gridObject.gridElement.style.transform = `perspective(700px) rotateX(${mousePos.y * 20 + 50}deg) rotateZ(${mousePos.x * 20}deg) translate3d(0rem, -0rem, 0rem)`;
 });
 

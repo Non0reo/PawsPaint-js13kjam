@@ -1,6 +1,6 @@
-import { Sprite } from "../../sprite";
+import { Sprite } from "../sprite";
 import type { ElementData, Position } from "../../types";
-import type { Grid } from "../../grid-types";
+import type { Grid } from "../../game/grid-types";
 
 class Entity extends Sprite {
     constructor(pos: Position, element: ElementData, g: Grid) {
@@ -11,10 +11,6 @@ class Entity extends Sprite {
         if (this.element.isEmpty) return;
         this.div.classList.add("entity", animate ? 'drop-animation' : 'no-animation');
         this.g.gridElement?.appendChild(this.div);
-    }
-
-    actionWhenMoving(): void {
-        // Default action when moving
     }
 }
 

@@ -1,4 +1,4 @@
-import type { Grid } from "../../grid-types";
+import type { Grid } from "../../game/grid-types";
 import type { ElementData, Position } from "../../types";
 import { Entity } from "./core-entity";
 
@@ -16,37 +16,26 @@ class Cat extends Entity {
         nextPos.x += dirVector.x;
         nextPos.y += dirVector.y;
 
-        // Check if the next position is walkable
         const nextTile = this.g.getTileAt(nextPos);
-        if (!nextTile || !nextTile.isWalkable) {
-            return; // Can't move if the next tile is not walkable
-        }
+        if (!nextTile || !nextTile.isWalkable) return;
 
         if (nextTile.entity instanceof Cat) {
-            //check if tile after the other cat is walkable
             let afterNextPos: Position = {x: nextPos.x + dirVector.x, y: nextPos.y + dirVector.y};
             const afterNextTile = this.g.getTileAt(afterNextPos);
-            if (!afterNextTile || !afterNextTile.isWalkable) {
-                return; // Can't move if the tile after the other cat is not walkable
-            }
-            // Move the other cat first
-            //(nextTile.entity as Cat).moveCat(dirVector);
+            if (!afterNextTile || !afterNextTile.isWalkable) return;
         }
 
-        
-
-        // Move to the new position
         this.moveTo(nextPos);
     }
 
-    /* actionWhenMoving(): void {
+    actionWhenMoving(): void {
         // Cat specific action when moving
         console.log("Cat is moving to", this.pos);
     }
 
     hasChanegedPosition(): void {
         console.log("Cat moved to", this.pos);
-    } */
+    }
 }
 
 export { Cat };

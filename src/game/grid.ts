@@ -1,10 +1,10 @@
 import type { Grid } from "./grid-types";
-import type { Sprite } from "./sprite";
-import type { Base } from "./tiles/base/core-base";
-import type { Entity } from "./tiles/entities/core-entity";
-import type { TileObject } from "./tiles/objects/core-object";
-import { invokeBaseFromType, invokeObjectFromType, invokeEntityFromType } from "./tiles/tile";
-import type { ElementData, GridPattern, Position, Tile } from "./types";
+import type { Sprite } from "../tiles/sprite";
+import type { Base } from "../tiles/base/core-base";
+import type { Entity } from "../tiles/entities/core-entity";
+import type { TileObject } from "../tiles/objects/core-object";
+import { invokeBaseFromType, invokeObjectFromType, invokeEntityFromType } from "../tiles/tile";
+import type { ElementData, GridPattern, Position, Tile } from "../types";
 
 class GridObject implements Grid {
     public p: GridPattern;

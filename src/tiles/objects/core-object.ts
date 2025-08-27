@@ -1,5 +1,5 @@
-import type { Grid } from "../../grid-types";
-import { Sprite } from "../../sprite";
+import type { Grid } from "../../game/grid-types";
+import { Sprite } from "../sprite";
 import type { ElementData, Position } from "../../types";
 
 class TileObject extends Sprite {
