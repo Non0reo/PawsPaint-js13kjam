@@ -30,7 +30,10 @@ class Cat extends Entity {
 
     actionWhenMoving(): void {
         // Cat specific action when moving
-        console.log("Cat is moving to", this.pos);
+        //console.log("Cat is moving to", this.pos);
+
+        //place a paint object on the tile it is moving to
+        //this.g.setTileAt(this.pos, 
     }
 
     hasChanegedPosition(): void {

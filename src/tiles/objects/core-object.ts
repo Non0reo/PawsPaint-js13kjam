@@ -5,6 +5,7 @@ import type { ElementData, Position } from "../../types";
 class TileObject extends Sprite {
     constructor(pos: Position, element: ElementData, g: Grid) {
         super(pos, element, g);
+        this.spawnElement();
     }
 
     spawnElement(animate: boolean = true): void {

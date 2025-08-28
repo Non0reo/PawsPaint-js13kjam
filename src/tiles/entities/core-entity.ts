@@ -5,6 +5,7 @@ import type { Grid } from "../../game/grid-types";
 class Entity extends Sprite {
     constructor(pos: Position, element: ElementData, g: Grid) {
         super(pos, element, g);
+        this.spawnElement();
     }
 
     spawnElement(animate: boolean = true): void {

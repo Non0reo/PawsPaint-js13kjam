@@ -32,9 +32,9 @@ let gridObject = new GridObject([
     [0, '1.0.1U', 0, '1.0.1U', 1.2]
 ], document.querySelector('#game') ?? document.body); */
 
-setTimeout(() => {
+/* setTimeout(() => {
     gridObject.loadGrid();
-}, 1000);
+}, 1000); */
 
 
 let gameKeys = {

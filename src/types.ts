@@ -19,7 +19,7 @@ type Tile = {
     base: Base | null,
     obj: TileObject | null,
     entity: Entity | null;
-    tile: [Base | null, TileObject | null, Entity | null];
+    tileArray: [Base | null, TileObject | null, Entity | null];
     isTile: boolean;
     isWalkable: boolean;
 }

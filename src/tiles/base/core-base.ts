@@ -6,6 +6,7 @@ import type { ElementData, Position } from "../../types";
 class Base extends Sprite {
     constructor(pos: Position, element: ElementData, g: Grid) {
         super(pos, element, g);
+        this.spawnElement();
     }
 
     spawnElement(animate: boolean = true): void {
