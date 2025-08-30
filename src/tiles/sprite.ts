@@ -1,11 +1,14 @@
 import type { Grid } from "../game/grid-types";
-import type { ElementData, Position } from "../types";
+import type { Direction, ElementData, Position } from "../types";
+import { directionFromDelta } from "../utils";
 
 class Sprite {
     pos: Position;
     div: HTMLDivElement;
     element: ElementData;
+    dir: Direction;
     g: Grid;
+    id: string = crypto.randomUUID();
     billboard: boolean = false;
     cameraPos: Position;
     moving: boolean = false;
@@ -14,6 +17,7 @@ class Sprite {
     constructor(pos: Position, element: ElementData, g: Grid) {
         this.pos = pos;
         this.element = element;
+        this.dir = (element.data !== null && element.data.length === 1 ? element.data![0] : 'U') as Direction;
         this.g = g;
         this.cameraPos = {x: (this.g.w - 1) / -2, y: 4};
         this.div = this.divGenerator();
@@ -50,9 +54,7 @@ class Sprite {
     }
 
     getElementDir(): number {
-        if(this.element.data === null) return 0;
-        const dirChar = this.element.data.slice(-1).toUpperCase();
-        switch (dirChar) {
+        switch (this.dir) {
             case 'R': return 90;
             case 'D': return 180;
             case 'L': return 270;
@@ -66,13 +68,13 @@ class Sprite {
     }
 
     moveTo(newPos: Position, force: boolean = false) {
-        console.log(this.moving)
         if(!force &&
             (this.moving || this.g.getTileAt(newPos) === null ||
             (newPos.x < 0 || newPos.y < 0 || newPos.x >= this.g.w || newPos.y >= this.g.h))
         ) return;
 
         this.moving = true;
+        this.dir = directionFromDelta(newPos.x - this.pos.x, newPos.y - this.pos.y) || this.dir;
 
         this.div.style.transition = 'none';
         this.div.style.transform = `
@@ -83,6 +85,11 @@ class Sprite {
         void this.div.offsetWidth;
         this.div.style.transition = 'all 0.3s ease-in-out';
 
+        //this.g.setTileAt(newPos, this)
+        //console.log(this)
+        // Determine direction of movement
+        this.actionWhenMoving(newPos, this.dir);
+        
        
         this.pos = newPos;
         this.div.style.gridArea = `${this.pos.y + 1} / ${this.pos.x + 1}`;
@@ -96,24 +103,22 @@ class Sprite {
             rotateZ(var(--rotationZ))
             rotateX(var(--rotationX))`;
 
-        this.actionWhenMoving();
-
         setTimeout(() => {
             this.moving = false;
-            this.hasChanegedPosition();
+            this.hasChangedPosition(newPos, this.dir);
         }, 300);
         
     }
 
-    actionWhenMoving(): void {
+    actionWhenMoving(_pos: Position | null, _dir: Direction | null): void {
     }
 
-    hasChanegedPosition(): void {
+    hasChangedPosition(_pos: Position | null, _dir: Direction | null): void {
     }
 
-    update() {
+    /* update() {
         this.div.style.setProperty("--rotation", Math.atan2(this.pos.x + this.cameraPos.x, this.pos.y + this.cameraPos.y) + 'rad');
-    }
+    } */
 }
 
 export { Sprite };

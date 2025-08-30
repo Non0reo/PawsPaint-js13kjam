@@ -1,31 +1,41 @@
 import type { Base } from "./tiles/base/core-base";
 import type { Entity } from "./tiles/entities/core-entity";
-import type { TileObject } from "./tiles/objects/core-object";
+import type { Obj } from "./tiles/objects/core-object";
+
+type GridPattern = any[][];
+type Direction = 'U' | 'D' | 'L' | 'R';
 
 type Position = {
     x: number;
     y: number;
 }
 
+type SpriteParams = {
+    pos: Position;
+    element: ElementData;
+    g: any; // Grid type is not imported here to avoid circular dependency
+    spawnDelay?: number;
+    animatonName?: string;
+}
+
 type ElementData = {
-    all: any;
+    raw: any;
     type: number;
-    data: any;
+    data: string | null;
+    spriteIndex: number;
     isEmpty: boolean;
 }
 
 type Tile = {
     pos: Position;
     base: Base | null,
-    obj: TileObject | null,
+    obj: Obj | null,
     entity: Entity | null;
-    tileArray: [Base | null, TileObject | null, Entity | null];
+    tileArray: [Base | null, Obj | null, Entity | null];
     isTile: boolean;
     isWalkable: boolean;
 }
 
 
-type Direction = 'Up' | 'Down' | 'Left' | 'Right';
-type GridPattern = any[][];
 
 export type { Position, Direction, ElementData, GridPattern, Tile };

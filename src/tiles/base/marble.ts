@@ -3,8 +3,9 @@ import type { ElementData, Position } from "../../types";
 import { Base } from "./core-base";
 
 class Marble extends Base {
-    constructor(pos: Position, element: ElementData, g: Grid) {
-        super(pos, element, g);
+    //constructor(pos: Position, data: any, g: Grid, spawnDelay: number) {
+    constructor(pos: Position, element: ElementData, g: Grid, spawnDelay: number) {
+        super(pos, element, g, spawnDelay);
         this.div.classList.add('walkable', 'base-marble');
     }
 

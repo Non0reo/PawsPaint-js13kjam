@@ -1,10 +1,10 @@
 import type { Grid } from "../../game/grid-types";
 import type { ElementData, Position } from "../../types";
-import { TileObject } from "./core-object";
+import { Obj } from "./core-object";
 
-class Soap extends TileObject {
-    constructor(pos: Position, element: ElementData, g: Grid) {
-        super(pos, element, g);
+class Soap extends Obj {
+    constructor(pos: Position, element: ElementData, g: Grid, spawnDelay: number) {
+        super(pos, element, g, spawnDelay);
         this.div.classList.add('obj-soap');
     }
 }

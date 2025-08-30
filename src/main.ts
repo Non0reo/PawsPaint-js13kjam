@@ -15,13 +15,13 @@ import type { Position } from "./types";
     ['1.1R.1', 1.0, '1.0.1U', 1, 1.3],
     [0, 1, 1.4, 0, 1, '1.0.1U'],
     [0, '1.0.1U', 0, '1.0.1U', 1.2]
-], document.querySelector('#game') ?? document.body); */
+], document.querySelector('#game')!, false, true); */
 
 let gridObject = new GridObject([
     ['1.1R.1', '1.1R.1', 1, 1, 1.3],
     [0, 1, 1.4, 0, 1, 1],
     [0, 1, 0, 1, 1.2]
-], document.querySelector('#game')!);
+], document.querySelector('#game')!, false, true);
 
 /* let gridObject = new GridObject([
     ['1.0.1U', 1.1, '1.0.1U', 1, 1.3],
@@ -32,9 +32,10 @@ let gridObject = new GridObject([
     [0, '1.0.1U', 0, '1.0.1U', 1.2]
 ], document.querySelector('#game') ?? document.body); */
 
-/* setTimeout(() => {
+setTimeout(() => {
     gridObject.loadGrid();
-}, 1000); */
+    console.log(gridObject)
+}, 1000);
 
 
 let gameKeys = {
@@ -54,12 +55,16 @@ window.addEventListener('keydown', (e) => {
         return;
     }
 
+    if(e.key === 'k') {
+        console.log(gridObject.p)
+    }
+
     let dir: string | null = null;
     Object.entries(gameKeys).forEach(([key, value]) => {
         if(value.includes(e.key)) dir = key;
     });
     if(dir === null) return;
-    console.log(dir);
+    //console.log(dir, gridObject);
 
     for (const entity of gridObject.entities) {
         if(entity instanceof Cat) {

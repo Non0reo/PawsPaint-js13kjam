@@ -3,8 +3,8 @@ import type { ElementData, Position } from "../../types";
 import { Entity } from "./core-entity";
 
 class Lady extends Entity {
-    constructor(pos: Position, element: ElementData, g: Grid) {
-        super(pos, element, g);
+    constructor(pos: Position, element: ElementData, g: Grid, spawnDelay: number) {
+        super(pos, element, g, spawnDelay);
         this.div.classList.add('entity-lady');
         this.setBillboard(true);
     }
