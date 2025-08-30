@@ -1,16 +1,15 @@
 import { Sprite } from "../sprite";
-import type { Grid } from "../../game/grid-types";
-import type { ElementData, Position } from "../../types";
+import type { SpriteParams } from "../../types";
 import { RADIUS } from "../../constants";
 
 class Base extends Sprite {
-    constructor(pos: Position, element: ElementData, g: Grid, spawnDelay: number) {
-        super(pos, element, g);
-        setTimeout(() => this.spawnElement(), spawnDelay);
+    constructor(opts: SpriteParams) {
+        super(opts);
+        setTimeout(() => this.spawnElement(), opts.spawnDelay);
     }
 
-    spawnElement(animate: boolean = true): void {
-        this.div.classList.add("base", animate ? 'drop-animation' : 'no-animation');
+    spawnElement(): void {
+        this.div.classList.add("base");
 
         const bR = [
             this.chkBorder(-1,-1) ? '0': RADIUS,

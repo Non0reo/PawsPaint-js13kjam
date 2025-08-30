@@ -1,5 +1,5 @@
 import type { Grid } from "../game/grid-types";
-import type { Direction, ElementData, Position } from "../types";
+import type { Direction, ElementData, Position, SpriteParams } from "../types";
 import { directionFromDelta } from "../utils";
 
 class Sprite {
@@ -14,20 +14,20 @@ class Sprite {
     moving: boolean = false;
     canWalkOver: boolean = true;
 
-    constructor(pos: Position, element: ElementData, g: Grid) {
-        this.pos = pos;
-        this.element = element;
-        this.dir = (element.data !== null && element.data.length === 1 ? element.data![0] : 'U') as Direction;
-        this.g = g;
+    constructor(opts: SpriteParams) {
+        this.pos = opts.pos;
+        this.element = opts.element;
+        this.dir = (opts.element.data !== null && opts.element.data.length === 1 ? opts.element.data![0] : 'U') as Direction;
+        this.g = opts.g;
         this.cameraPos = {x: (this.g.w - 1) / -2, y: 4};
-        this.div = this.divGenerator();
+        this.div = this.divGenerator(opts.animationName);
         this.setBillboard();
         this.rotateTo(this.getElementDir());
     }
 
-    divGenerator() {
+    divGenerator(animateionName?: string): HTMLDivElement {
         let div = document.createElement('div');
-        div.classList.add('sprite');
+        div.classList.add('sprite', animateionName ?? 'drop-animation');
         div.style.gridArea = `${this.pos.y + 1} / ${this.pos.x + 1}`;
         div.style.setProperty("--rotationZ", Math.atan2(this.pos.x + this.cameraPos.x, this.pos.y + this.cameraPos.y) + 'rad');
         return div;

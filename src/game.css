@@ -49,8 +49,16 @@ body {
         rotateX(var(--rotationX));
 }
 
+.sprite.no-animation {
+    animation: none;
+}
+
 .sprite.drop-animation {
     animation: apparition 1s ease-out;
+}
+
+.sprite.fade-animation {
+    animation: fade-in 0.3s ease-out;
 }
 
 @keyframes apparition {
@@ -68,6 +76,11 @@ body {
             rotateZ(var(--rotationZ))
             rotateX(var(--rotationX));
     }
+}
+
+@keyframes fade-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 @keyframes joy-dance {

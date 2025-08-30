@@ -4,6 +4,7 @@ import type { Obj } from "./tiles/objects/core-object";
 
 type GridPattern = any[][];
 type Direction = 'U' | 'D' | 'L' | 'R';
+type SpriteTypes = typeof Base | typeof Obj | typeof Entity;
 
 type Position = {
     x: number;
@@ -15,7 +16,7 @@ type SpriteParams = {
     element: ElementData;
     g: any; // Grid type is not imported here to avoid circular dependency
     spawnDelay?: number;
-    animatonName?: string;
+    animationName?: string;
 }
 
 type ElementData = {
@@ -38,4 +39,4 @@ type Tile = {
 
 
 
-export type { Position, Direction, ElementData, GridPattern, Tile };
+export type { Position, Direction, ElementData, GridPattern, Tile, SpriteParams, SpriteTypes };

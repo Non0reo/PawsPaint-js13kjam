@@ -1,12 +1,11 @@
-import type { Grid } from "../../game/grid-types";
-import type { Direction, ElementData, Position } from "../../types";
+import type { Direction, Position, SpriteParams } from "../../types";
 import { patternToElementData } from "../../utils";
 import { Paint } from "../objects/paint";
 import { Entity } from "./core-entity";
 
 class Cat extends Entity {
-    constructor(pos: Position, element: ElementData, g: Grid, spawnDelay: number) {
-        super(pos, element, g, spawnDelay);
+    constructor(opts: SpriteParams) {
+        super(opts);
         this.div.classList.add('entity-cat');
         this.setBillboard(true);
         this.canWalkOver = false;
@@ -38,7 +37,13 @@ class Cat extends Entity {
         const tile = this.g.getTileAt(_pos);
         if (tile.obj && tile.obj instanceof Paint) return;
 
-        this.g.setTileAt(_pos, new Paint(_pos, patternToElementData("0.1" + _dir)[1], this.g, 0));
+        this.g.setTileAt(_pos, new Paint({
+            pos: _pos,
+            element: patternToElementData("0.1" + _dir)[1],
+            g: this.g,
+            spawnDelay: 0,
+            animationName: 'fade-animation'
+        }));
     }
 
     hasChangedPosition(_pos: Position | null, _dir: Direction | null): void {

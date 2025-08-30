@@ -3,7 +3,7 @@ import type { Sprite } from "../tiles/sprite";
 import { Base } from "../tiles/base/core-base";
 import { Entity } from "../tiles/entities/core-entity";
 import { Obj } from "../tiles/objects/core-object";
-import { invokeBaseFromType, invokeObjectFromType, invokeEntityFromType } from "../tiles/tile";
+import { invokeSpriteFromType } from "../tiles/tile";
 import type { ElementData, GridPattern, Position, Tile } from "../types";
 import { elementDataToPattern, patternToElementData } from "../utils";
 
@@ -159,9 +159,12 @@ class GridObject implements Grid {
                     entity: null
                 }
                     
-                tileS.base = invokeBaseFromType({x, y}, element[0], this, this.animate ? 100 * counter : 0);
-                tileS.obj = invokeObjectFromType({x, y}, element[1], this, this.animate ? 100 * counter + 500 : 0);
-                tileS.entity = invokeEntityFromType({x, y}, element[2], this, this.animate ? 100 * counter + 500 : 0);
+                // tileS.base = invokeBaseFromType({x, y}, element[0], this, this.animate ? 100 * counter : 0);
+                // tileS.obj = invokeObjectFromType({x, y}, element[1], this, this.animate ? 100 * counter + 500 : 0);
+                // tileS.entity = invokeEntityFromType({x, y}, element[2], this, this.animate ? 100 * counter + 500 : 0);
+                tileS.base = invokeSpriteFromType({pos: {x, y}, element: element[0], g: this, spawnDelay: this.animate ? 100 * counter : 0}, Base) as Base | null;
+                tileS.obj = invokeSpriteFromType({pos: {x, y}, element: element[1], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Obj) as Obj | null;
+                tileS.entity = invokeSpriteFromType({pos: {x, y}, element: element[2], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Entity) as Entity | null;
 
                 tileS.base ? this.bases.push(tileS.base) : null;
                 tileS.obj ? this.objects.push(tileS.obj) : null;

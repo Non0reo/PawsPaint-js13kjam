@@ -1,11 +1,10 @@
-import type { Grid } from "../../game/grid-types";
-import type { ElementData, Position } from "../../types";
+import type { SpriteParams } from "../../types";
 import { Base } from "./core-base";
 
 class Marble extends Base {
     //constructor(pos: Position, data: any, g: Grid, spawnDelay: number) {
-    constructor(pos: Position, element: ElementData, g: Grid, spawnDelay: number) {
-        super(pos, element, g, spawnDelay);
+    constructor(opts: SpriteParams) {
+        super(opts);
         this.div.classList.add('walkable', 'base-marble');
     }
 
