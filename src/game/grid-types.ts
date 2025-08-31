@@ -4,7 +4,7 @@ import type { Obj } from "../tiles/objects/core-object";
 import type { Sprite } from "../tiles/sprite";
 import type { Position, Tile } from "../types";
 
-interface Grid {
+interface GridType {
     getTileAt(pos: Position): Tile;
     setTileAt(pos: Position, sprite: Sprite): void;
     w: number;
@@ -13,7 +13,7 @@ interface Grid {
     bases: Base[];
     objects: Obj[];
     entities: Entity[];
-    gridElement: HTMLElement | null;
+    gEl: HTMLElement | null;
 }
 
-export type { Grid };
+export type { GridType };

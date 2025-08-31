@@ -20,7 +20,7 @@ class Base extends Sprite {
         const bRF = bR.join(' ');
         this.div.style.borderRadius = bRF;
 
-        this.g.gridElement?.appendChild(this.div);
+        this.g.gEl?.appendChild(this.div);
     }
 
     chkNear(dx: number, dy: number): boolean {

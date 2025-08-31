@@ -2,70 +2,47 @@ import type { SpriteParams, SpriteTypes } from "../types";
 import { Base } from "./base/core-base";
 import { Entity } from "./entities/core-entity";
 import { Obj } from "./objects/core-object";
-import { ObjectName } from "../constants";
 
+import { Marble } from "./base/marble";
+import { Cat } from "./entities/cat";
+import { Lady } from "./entities/lady";
+import { Mouse } from "./entities/mouse";
+import { Bucket } from "./objects/bucket";
+import { Ladyline } from "./objects/ladyline";
+import { Paint } from "./objects/paint";
+import { Puddle } from "./objects/puddle";
+import { Soap } from "./objects/soap";
+import { Yarn } from "./objects/yarn";
 
-/* function invokeBaseFromType(pos: Position, element: ElementData | null, g: Grid, spawnDelay: number): Base | null {
-    if (!element) return null;
-    let entity: Base | null = null;
-    const params = {pos, element, g, spawnDelay} as SpriteParams;
-    switch (element.type) {
-        case 1: entity = new Marble(params); break;
-    
-        default: break;
-    }
-    return entity;
-}
-
-function invokeObjectFromType(pos: Position, element: ElementData | null, g: Grid, spawnDelay: number): Obj | null {
-    if (!element) return null;
-    //let entity: Obj | null = null;
-    const params = {pos, element, g, spawnDelay} as SpriteParams;
-    // switch (element.type) {
-    //     case 1: entity = new Paint(params); break;
-    //     case 2: entity = new Yarn(params); break;
-    //     case 3: entity = new Soap(params); break;
-    //     case 4: entity = new Bucket(params); break;
-    //     case 5: entity = new Puddle(params); break;
-    //     case 6: entity = new Ladyline(params); break;
-    
-    //     default: break;
-    // }
-    //get object name from constants
-    const elementName = ObjectName.get(element.type) || "Empty";
-    if(elementName === "Empty") return null;
-    return new (eval(elementName))(params) as Obj;
-
-    //return entity;
-}
-
-function invokeEntityFromType(pos: Position, element: ElementData | null, g: Grid, spawnDelay: number): Entity | null {
-    if (!element) return null;
-    let entity: Entity | null = null;
-    const params = {pos, element, g, spawnDelay} as SpriteParams;
-    switch (element.type) {
-        case 1: entity = new Cat(params); break;
-        case 2: entity = new Cat(params); break;
-        case 3: entity = new Lady(params); break;
-    
-        default: break;
-    }
-    return entity;
-} */
+import { getBaseName, getObjectName, getEntityName } from "../constants";
 
 function invokeSpriteFromType(opts: SpriteParams, spriteType: SpriteTypes): Base | Obj | Entity | null {
-    if (!opts.element) return null;
-    let elementName;
+    if (!opts.el) return null;
+    let spriteClass;
     switch (spriteType) {
-        case Base: elementName = ObjectName.get(opts.element.type) || null; break;
-        case Obj: elementName = ObjectName.get(opts.element.type) || null; break;
-        case Entity: elementName = ObjectName.get(opts.element.type) || null; break;
+        case Base: spriteClass = getBaseName.get(opts.el.type) || null; break;
+        case Obj: spriteClass = getObjectName.get(opts.el.type) || null; break;
+        case Entity: spriteClass = getEntityName.get(opts.el.type) || null; break;
         default: break;
     }
 
-    if (!elementName) return null;
-    return new (eval(elementName as string))(opts) as Base | Obj | Entity;
+    if (!spriteClass) return null;
+    const classMap: { [key: string]: new (opts: SpriteParams) => Base | Obj | Entity } = {
+        Marble: Marble,
+        Paint: Paint,
+        Yarn: Yarn,
+        Soap: Soap,
+        Bucket: Bucket,
+        Puddle: Puddle,
+        Ladyline: Ladyline,
+        Cat: Cat,
+        Mouse: Mouse,
+        Lady: Lady,
+    };
+    const ctor = classMap[spriteClass];
+    if (!ctor) return null;
+
+    return new ctor(opts);
 }
 
-// export { invokeBaseFromType, invokeObjectFromType, invokeEntityFromType };
 export { invokeSpriteFromType };

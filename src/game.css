@@ -24,10 +24,12 @@ body {
 }
 
 .grid {
+    --rotX: 0deg;
+    --rotZ: 0deg;
     display: grid;
     place-items: center;
     transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-    transform:  perspective(700px) rotateX(50deg) rotateZ(0deg) translate3d(0rem, -0rem, 0rem);
+    transform: perspective(700px) rotateX(calc(var(--rotX) + 50deg)) rotateZ(var(--rotZ)) translate3d(0rem, 0rem, 0rem);
     transform-style: preserve-3d;
 }
 
@@ -49,21 +51,26 @@ body {
         rotateX(var(--rotationX));
 }
 
-.sprite.no-animation {
+.sprite[anim="no-animation"] {
     animation: none;
 }
 
-.sprite.drop-animation {
+.sprite[anim="drop-animation"] {
     animation: apparition 1s ease-out;
 }
 
-.sprite.fade-animation {
+.sprite[anim="fade-animation"] {
     animation: fade-in 0.3s ease-out;
+}
+
+.sprite[anim="joy-animation"] {
+    animation: joy-dance 1s ease-out infinite;
 }
 
 @keyframes apparition {
     0% {
         opacity: 0;
+        scale: 0;
         transform:
             translate3d(0, var(--sprite-y-offset), calc(var(--sprite-z-offset) + 5rem))
             rotateZ(var(--rotationZ))
@@ -71,6 +78,7 @@ body {
     }
     100% {
         opacity: 1;
+        scale: 1;
         transform:
             translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
             rotateZ(var(--rotationZ))
@@ -79,8 +87,8 @@ body {
 }
 
 @keyframes fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+    0% { opacity: 0; scale: 0; }
+    100% { opacity: 1; scale: 1; }
 }
 
 @keyframes joy-dance {

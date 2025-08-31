@@ -1,4 +1,4 @@
-import type { Grid } from "../game/grid-types";
+import type { GridType } from "../game/grid-types";
 import type { Sprite } from "../tiles/sprite";
 import { Base } from "../tiles/base/core-base";
 import { Entity } from "../tiles/entities/core-entity";
@@ -7,12 +7,12 @@ import { invokeSpriteFromType } from "../tiles/tile";
 import type { ElementData, GridPattern, Position, Tile } from "../types";
 import { elementDataToPattern, patternToElementData } from "../utils";
 
-class GridObject implements Grid {
+class Grid implements GridType {
     public p: GridPattern;
     public bases: Base[] = [];
     public objects: Obj[] = [];
     public entities: Entity[] = [];
-    public gridElement: HTMLElement;
+    public gEl: HTMLElement;
     public animate: boolean = true;
     private _extractedData: ElementData[][] = [];
 
@@ -35,27 +35,14 @@ class GridObject implements Grid {
             e.push(...added);
         });
 
-        this.gridElement = parentElement.appendChild(document.createElement('div'));
-        this.gridElement.classList.add('grid');
-        this.gridElement.style.gridTemplate = `repeat(${this.h}, 1rem) / repeat(${this.w}, 1rem)`;
+        this.gEl = parentElement.appendChild(document.createElement('div'));
+        this.gEl.classList.add('grid');
+        this.gEl.style.gridTemplate = `repeat(${this.h}, 1rem) / repeat(${this.w}, 1rem)`;
 
         this.animate = animate;
 
         for (let y = 0; y < this.h; y++) {
             for (let x = 0; x < this.w; x++) {
-                /* const dataSliced = `${this.p[y][x]}`.split('.');
-                while (dataSliced.length < 3) dataSliced.push('0');
-
-                let elData: ElementData[] = [];
-                dataSliced.forEach(element => {
-                    elData.push({
-                        raw: element || null,
-                        type: parseInt(element) || 0,
-                        data: element.replace(/[^a-zA-Z]/g, '') || null,
-                        isEmpty: element === '0' || element === '' ? true : false,
-                    });
-                }); */
-
                 this._extractedData.push(patternToElementData(this.p[y][x]));
             }
         }
@@ -111,20 +98,12 @@ class GridObject implements Grid {
         // change the pattern data
         const index = pos.y * this.w + pos.x;
         if (index >= 0 && index < this._extractedData.length) {
-            //const element = sprite.element;
 
-            //this.p[pos.y][pos.x] = elementDataToPattern([element], this.p[pos.y][pos.x]);
-            this.p = this.buildPattern();
-
-            // Update the grid element's style if needed
-            if (this.gridElement) {
-                this.gridElement.style.gridTemplate = `repeat(${this.h}, 1rem) / repeat(${this.w}, 1rem)`;
-            }
-
+            this.p = this.getPattern();
         }
     }
 
-    buildPattern(): GridPattern {
+    getPattern(): GridPattern {
         let newPattern: GridPattern = [];
         for (let y = 0; y < this.h; y++) {
             let row: (string | number)[] = [];
@@ -144,27 +123,24 @@ class GridObject implements Grid {
         
 
     loadGrid() {
-        if(this.gridElement === null) return;
+        if(this.gEl === null) return;
         this.bases, this.objects, this.entities = [];
-        this.gridElement.innerHTML = ''; // Clear previous elements if any
+        this.gEl.innerHTML = ''; // Clear previous elements if any
 
         let counter = 0;
         for (let y = 0; y < this.h; y++) {
             for (let x = 0; x < this.w; x++) {
-                const element = this._extractedData[counter];
+                const extEl = this._extractedData[counter];
 
                 let tileS: Pick<Tile, 'base' | 'obj' | 'entity'> = {
                     base: null,
                     obj: null,
                     entity: null
                 }
-                    
-                // tileS.base = invokeBaseFromType({x, y}, element[0], this, this.animate ? 100 * counter : 0);
-                // tileS.obj = invokeObjectFromType({x, y}, element[1], this, this.animate ? 100 * counter + 500 : 0);
-                // tileS.entity = invokeEntityFromType({x, y}, element[2], this, this.animate ? 100 * counter + 500 : 0);
-                tileS.base = invokeSpriteFromType({pos: {x, y}, element: element[0], g: this, spawnDelay: this.animate ? 100 * counter : 0}, Base) as Base | null;
-                tileS.obj = invokeSpriteFromType({pos: {x, y}, element: element[1], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Obj) as Obj | null;
-                tileS.entity = invokeSpriteFromType({pos: {x, y}, element: element[2], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Entity) as Entity | null;
+
+                tileS.base = invokeSpriteFromType({pos: {x, y}, el: extEl[0], g: this, spawnDelay: this.animate ? 100 * counter : 0}, Base) as Base | null;
+                tileS.obj = invokeSpriteFromType({pos: {x, y}, el: extEl[1], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Obj) as Obj | null;
+                tileS.entity = invokeSpriteFromType({pos: {x, y}, el: extEl[2], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Entity) as Entity | null;
 
                 tileS.base ? this.bases.push(tileS.base) : null;
                 tileS.obj ? this.objects.push(tileS.obj) : null;
@@ -176,8 +152,8 @@ class GridObject implements Grid {
     }
 
     dispose() {
-        this.gridElement?.remove();
+        this.gEl?.remove();
     }
 }
 
-export { GridObject };
+export { Grid };

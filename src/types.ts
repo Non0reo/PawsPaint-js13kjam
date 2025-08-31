@@ -13,7 +13,7 @@ type Position = {
 
 type SpriteParams = {
     pos: Position;
-    element: ElementData;
+    el: ElementData;
     g: any; // Grid type is not imported here to avoid circular dependency
     spawnDelay?: number;
     animationName?: string;

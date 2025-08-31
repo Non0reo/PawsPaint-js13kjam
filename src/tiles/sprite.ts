@@ -1,4 +1,4 @@
-import type { Grid } from "../game/grid-types";
+import type { GridType } from "../game/grid-types";
 import type { Direction, ElementData, Position, SpriteParams } from "../types";
 import { directionFromDelta } from "../utils";
 
@@ -7,7 +7,7 @@ class Sprite {
     div: HTMLDivElement;
     element: ElementData;
     dir: Direction;
-    g: Grid;
+    g: GridType;
     id: string = crypto.randomUUID();
     billboard: boolean = false;
     cameraPos: Position;
@@ -16,8 +16,8 @@ class Sprite {
 
     constructor(opts: SpriteParams) {
         this.pos = opts.pos;
-        this.element = opts.element;
-        this.dir = (opts.element.data !== null && opts.element.data.length === 1 ? opts.element.data![0] : 'U') as Direction;
+        this.element = opts.el;
+        this.dir = (opts.el.data?.length === 1 ? opts.el.data[0] : 'U') as Direction;
         this.g = opts.g;
         this.cameraPos = {x: (this.g.w - 1) / -2, y: 4};
         this.div = this.divGenerator(opts.animationName);
@@ -27,7 +27,8 @@ class Sprite {
 
     divGenerator(animateionName?: string): HTMLDivElement {
         let div = document.createElement('div');
-        div.classList.add('sprite', animateionName ?? 'drop-animation');
+        div.classList.add('sprite');
+        div.setAttribute('anim', animateionName ?? 'drop-animation');
         div.style.gridArea = `${this.pos.y + 1} / ${this.pos.x + 1}`;
         div.style.setProperty("--rotationZ", Math.atan2(this.pos.x + this.cameraPos.x, this.pos.y + this.cameraPos.y) + 'rad');
         return div;
@@ -51,6 +52,10 @@ class Sprite {
             this.div.style.setProperty("--sprite-z-offset", '0rem');
             this.div.style.transformOrigin = 'center center';
         }
+    }
+
+    setAnimation(name: string = 'no-animation') {
+        this.div.setAttribute('anim', name);
     }
 
     getElementDir(): number {

@@ -10,7 +10,7 @@ class Entity extends Sprite {
 
     spawnElement(): void {
         this.div.classList.add("entity");
-        this.g.gridElement?.appendChild(this.div);
+        this.g.gEl?.appendChild(this.div);
     }
 }
 

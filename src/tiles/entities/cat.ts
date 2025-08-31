@@ -18,13 +18,10 @@ class Cat extends Entity {
         nextPos.y += dirVector.y;
 
         const nextTile = this.g.getTileAt(nextPos);
-        console.log(nextTile);
         if (nextTile.entity instanceof Cat) {
-            console.log("Cat in the way, checking if it can move");
             let afterNextPos: Position = {x: nextPos.x + dirVector.x, y: nextPos.y + dirVector.y};
             const afterNextTile = this.g.getTileAt(afterNextPos);
             if (!afterNextTile || !afterNextTile.isWalkable) return;
-            
         }
         else if (!nextTile || !nextTile.isWalkable) return;
 
@@ -35,15 +32,18 @@ class Cat extends Entity {
         if(!_pos || !_dir) return;
 
         const tile = this.g.getTileAt(_pos);
-        if (tile.obj && tile.obj instanceof Paint) return;
+        //if (tile.obj && tile.obj instanceof Paint) return;
+        if (tile.obj) return;
 
         this.g.setTileAt(_pos, new Paint({
             pos: _pos,
-            element: patternToElementData("0.1" + _dir)[1],
+            el: patternToElementData("0.1" + _dir)[1],
             g: this.g,
             spawnDelay: 0,
             animationName: 'fade-animation'
         }));
+
+        /* this.setAnimation('no-animation'); */
     }
 
     hasChangedPosition(_pos: Position | null, _dir: Direction | null): void {

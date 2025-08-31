@@ -9,7 +9,7 @@ class Obj extends Sprite {
 
     spawnElement(): void {
         this.div.classList.add("obj");
-        this.g.gridElement?.appendChild(this.div);
+        this.g.gEl?.appendChild(this.div);
     }
 }
 
