@@ -1,0 +1,32 @@
+{
+    "creator": "nonoreo",
+    "name": "Main Levels",
+    "id": "main",
+    "levels": [
+        {
+            "name": "Beginning 1",
+            "description": "Walk on every tiles to paint them.",
+            "pattern": [
+                ["1.1R.1", 1, 1, 1, 1]
+            ]
+        },
+        {
+            "name": "Beginning 2",
+            "description": "You can walk up, down, left and right.",
+            "pattern": [
+                [0       , 1, 1, 0, 1],
+                ["1.1R.1", 1, 1, 1, 1]
+            ]
+        },
+        {
+            "name": "Beginning 3",
+            "description": "Sometimes you have a maximum number of moves.",
+            "pattern": [
+                [0       , 0, 0, 0, 1],
+                ["1.1R.1", 1, 1, 1, 1],
+                [0       , 0, 1, 1, 1],
+                [0       , 1, 1, 1, 1]
+            ]
+        }
+    ]
+}

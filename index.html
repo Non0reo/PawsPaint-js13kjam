@@ -3,11 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="src/game.css">
+    <link rel="stylesheet" href="src/css/game.css">
+    <link rel="stylesheet" href="src/css/ui.css">
     <title>Paint Paws</title>
 </head>
 <body>
-    <div id="game"></div>
+    <div id="app">
+        <div id="game">
+            <div class="level"></div>
+            <div class="ui" visible="false">
+                <header>
+                    <button class="btn-undo"></button>
+                    <button class="btn-home"></button>
+                    <button class="btn-reset"></button>
+                </header>
+                <footer>
+                    <span class="level-title"></span>
+                    <span class="level-description"></span>
+                    <!-- <div class="arrow-key-help">
+                        <span class="arrow"></span>
+                        <span class="arrow"></span>
+                        <span class="arrow"></span>
+                        <span class="arrow"></span>
+                    </div> -->
+                </footer>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="src/main.js" defer></script>
 </body>

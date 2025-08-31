@@ -1,0 +1,112 @@
+.ui {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100dvw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+    transition: height 0.3s ease-in-out;
+}
+
+/* .ui[data-visible="false"] {
+    pointer-events: none;
+    height: 120dvh;
+}
+
+.ui[data-visible="true"] {
+    pointer-events: auto;
+    height: 100dvh;
+} */
+
+header {
+    /* width: fit-content;
+    height: fit-content; */
+    
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    transition: transform 1s cubic-bezier(0.33, 1, 0.66, 1);
+}
+
+.ui[visible="false"] header {
+    transform: translateY(-1rem);
+}
+
+header > button {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: url('/sprites/ui.webp') no-repeat;
+    background-size: 1.5rem;
+    image-rendering: pixelated;
+    border: none;
+    border-radius: 10%;
+    cursor: pointer;
+    outline: 4px var(--blue) outset;
+    transition: all 0.1s var(--std-anim);
+}
+
+header > button:hover {
+    border-radius: 20%;
+}
+
+header > button:active {
+    outline: 4px var(--blue) inset;
+}
+
+.btn-undo {
+    background-position: 0 0;
+}
+
+.btn-home {
+    background-position: 50% 0;
+}
+
+.btn-reset {
+    background-position: 100% 0rem;
+}
+
+
+
+
+/* HELPERS */
+
+.arrow-key-help {
+    width: 3rem;
+    height: 2rem;
+    display: grid;
+    grid-template-areas: 
+        ". u ."
+        "l d r";
+    scale: 0.5;
+}
+
+.arrow, .arrow::after {
+    width: 1rem;
+    height: 1rem;
+    background: url('/sprites/ui.webp') no-repeat;
+    background-size: 3rem;
+    image-rendering: pixelated;
+    display: block;
+    background-position: 0% 100%;
+}
+
+.arrow::after {
+    content: "";
+    background-position: 50% 100%;
+}
+
+.arrow:nth-child(1) { grid-area: u; }
+.arrow:nth-child(1)::after { transform: rotate(0deg); }
+
+.arrow:nth-child(2) { grid-area: l; }
+.arrow:nth-child(2)::after { transform: rotate(-90deg); }
+
+.arrow:nth-child(3) { grid-area: d; }
+.arrow:nth-child(3)::after { transform: rotate(180deg); }
+
+.arrow:nth-child(4) { grid-area: r; }
+.arrow:nth-child(4)::after { transform: rotate(90deg); }

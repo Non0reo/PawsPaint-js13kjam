@@ -1,11 +1,14 @@
 :root {
     font-size: 8em;
     --black: #0f1939;
+    --blue: #37507e;
     --white: #fdfbdf;
+    --std-anim: cubic-bezier(0.33, 1, 0.66, 1);
 }
 
 * {
     margin: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body {
@@ -28,7 +31,7 @@ body {
     --rotZ: 0deg;
     display: grid;
     place-items: center;
-    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+    transition: transform 0.3s var(--std-anim);
     transform: perspective(700px) rotateX(calc(var(--rotX) + 50deg)) rotateZ(var(--rotZ)) translate3d(0rem, 0rem, 0rem);
     transform-style: preserve-3d;
 }
@@ -56,7 +59,7 @@ body {
 }
 
 .sprite[anim="drop-animation"] {
-    animation: apparition 1s ease-out;
+    animation: apparition 1.5s var(--std-anim);
 }
 
 .sprite[anim="fade-animation"] {
@@ -121,7 +124,7 @@ body {
     width: 1rem;
     height: 1rem;
     /* background-color: var(--white); */
-    background: url("/tiles/floor.webp");
+    background: url("/sprites/floor.webp");
     background-size: cover;
     image-rendering: pixelated;
     
@@ -134,7 +137,7 @@ body {
     width: 1rem;
     height: 1rem;
     z-index: 10;
-    background-image: url("/objects/objects.webp");
+    background-image: url("/sprites/objects.webp");
     background-size: 4rem;
 }
 
@@ -164,7 +167,7 @@ body {
 .entity-cat {
     width: 1rem;
     height: 1rem;
-    background-image: url("/entities/cat.webp");
+    background-image: url("/sprites/cat.webp");
     position: relative;
     background-size: 3rem;
     background-position: bottom left 0%;

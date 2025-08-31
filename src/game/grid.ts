@@ -1,19 +1,26 @@
+import type { Direction, ElementData, GridPattern, Position, Tile } from "../types";
 import type { GridType } from "../game/grid-types";
 import type { Sprite } from "../tiles/sprite";
+
 import { Base } from "../tiles/base/core-base";
-import { Entity } from "../tiles/entities/core-entity";
 import { Obj } from "../tiles/objects/core-object";
+import { Entity } from "../tiles/entities/core-entity";
+
+import { Cat } from "../tiles/entities/cat";
+import { Paint } from "../tiles/objects/paint";
+
 import { invokeSpriteFromType } from "../tiles/tile";
-import type { ElementData, GridPattern, Position, Tile } from "../types";
 import { elementDataToPattern, patternToElementData } from "../utils";
+import type { Game } from "../game";
 
 class Grid implements GridType {
-    public p: GridPattern;
-    public bases: Base[] = [];
-    public objects: Obj[] = [];
-    public entities: Entity[] = [];
-    public gEl: HTMLElement;
-    public animate: boolean = true;
+    game: Game;
+    p: GridPattern = [];
+    bases: Base[] = [];
+    objects: Obj[] = [];
+    entities: Entity[] = [];
+    gEl: HTMLElement;
+    animate: boolean = true;
     private _extractedData: ElementData[][] = [];
 
     get objectsAll(): Sprite[] {
@@ -28,26 +35,14 @@ class Grid implements GridType {
         return this.p.length;
     }
 
-    constructor(p: GridPattern, parentElement: HTMLElement, loadNow: boolean = true, animate: boolean = true) {
-        this.p = p;
-        this.p.forEach(e => {
-            const added = Array(this.w - e.length).fill(0);
-            e.push(...added);
-        });
-
+    constructor(p: GridPattern, parentElement: HTMLElement, game: Game, loadNow: boolean = true, animate: boolean = true) {
+        this.game = game;
         this.gEl = parentElement.appendChild(document.createElement('div'));
         this.gEl.classList.add('grid');
-        this.gEl.style.gridTemplate = `repeat(${this.h}, 1rem) / repeat(${this.w}, 1rem)`;
 
         this.animate = animate;
 
-        for (let y = 0; y < this.h; y++) {
-            for (let x = 0; x < this.w; x++) {
-                this._extractedData.push(patternToElementData(this.p[y][x]));
-            }
-        }
-        
-        if(loadNow) this.loadGrid();
+        this.setPattern(p, loadNow);
     }
 
     getTileAt(pos: Position): Tile {
@@ -106,7 +101,7 @@ class Grid implements GridType {
     getPattern(): GridPattern {
         let newPattern: GridPattern = [];
         for (let y = 0; y < this.h; y++) {
-            let row: (string | number)[] = [];
+            let row: (string | number | ElementData[])[] = [];
             for (let x = 0; x < this.w; x++) {
                 const tile = this.getTileAt({x, y});
                 let elements: ElementData[] = [];
@@ -120,12 +115,29 @@ class Grid implements GridType {
         }
         return newPattern;
     }
+
+    setPattern(newPattern: GridPattern, loadNow: boolean = false): void {
+        //this.dispose();
+        this.p = newPattern;
+        this.p.forEach(e => {
+            const added = Array(this.w - e.length).fill(0);
+            e.push(...added);
+        });
+        this._extractedData = [];
+        for (let y = 0; y < this.h; y++) {
+            for (let x = 0; x < this.w; x++) {
+                this._extractedData.push(patternToElementData(this.p[y][x]));
+            }
+        }
+        if(loadNow) this.loadGrid();
+    }
         
 
     loadGrid() {
         if(this.gEl === null) return;
         this.bases, this.objects, this.entities = [];
         this.gEl.innerHTML = ''; // Clear previous elements if any
+        this.gEl.style.gridTemplate = `repeat(${this.h}, 1rem) / repeat(${this.w}, 1rem)`;
 
         let counter = 0;
         for (let y = 0; y < this.h; y++) {
@@ -149,6 +161,46 @@ class Grid implements GridType {
                 counter++;
             }
         }
+    }
+
+    keyEvent(_e: KeyboardEvent, _dir: Direction) {
+        if(_e.key === 'k') {
+            console.log(this.p)
+        }
+
+        for (const entity of this.entities) {
+            if(entity instanceof Cat) {
+                switch (_dir) {
+                    case 'U': entity.moveCat({x: 0, y: -1}); break;
+                    case 'D': entity.moveCat({x: 0, y: 1}); break;
+                    case 'L': entity.moveCat({x: -1, y: 0}); break;
+                    case 'R': entity.moveCat({x: 1, y: 0}); break;
+                }
+            }
+        }
+
+        if(this.allTilesPainted()) this.game.changeStatus('levelComplete');
+    }
+
+    mouseEvent(_e: MouseEvent) {
+        const mousePos: Position = {
+            x: _e.type === 'mousemove' ? (_e.clientX / _e.view!.innerWidth) - 0.5 : 0,
+            y: _e.type === 'mousemove' ? (_e.clientY / _e.view!.innerHeight) - 0.5 : 0
+        }
+
+        this.gEl.style.setProperty('--rotX', (mousePos.y * 20) + 'deg');
+        this.gEl.style.setProperty('--rotZ', (mousePos.x * 20) + 'deg');
+    }
+
+    allTilesPainted(): boolean {
+        for (let y = 0; y < this.h; y++) {
+            for (let x = 0; x < this.w; x++) {
+                const tile = this.getTileAt({x, y});
+                if (!tile.isTile) continue;
+                if ((tile.isWalkable || tile.entity?.element.type === 1) && !(tile.obj instanceof Paint)) return false;
+            }
+        }
+        return true;
     }
 
     dispose() {
