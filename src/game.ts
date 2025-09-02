@@ -1,8 +1,10 @@
 import type { Direction, GameStatus, LevelsData } from "./types";
 import { Grid } from "./game/grid";
 import { Levels } from "./game/levels";
+import { Cat } from "./tiles/entities/cat";
 
 import mainLevels from './levels/main.json' assert { type: 'json' };
+
 
 class Game {
     status: GameStatus = 'init';
@@ -63,6 +65,8 @@ class Game {
             return;
         }
         this.grid?.setPattern(level.pattern, true);
+        this.uiEl.querySelector('.level-name')!.textContent = level.name;
+        this.uiEl.querySelector('.level-description')!.textContent = level.description;
         this.changeStatus('inLevel');
     }
 
@@ -88,6 +92,11 @@ class Game {
             
             case 'levelComplete':
                 this.uiEl.setAttribute('visible', 'false');
+                for (const entity of this.grid!.entities) {
+                    if(entity instanceof Cat) {
+                        entity.setAnimation('joy-animation');
+                    }
+                }
                 break;
         }
     }
