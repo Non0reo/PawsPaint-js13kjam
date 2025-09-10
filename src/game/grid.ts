@@ -19,6 +19,8 @@ class Grid implements GridType {
     bases: Base[] = [];
     objects: Obj[] = [];
     entities: Entity[] = [];
+    //sprites: Sprite[] = [];
+    prevP: GridPattern = [];
     gEl: HTMLElement;
     animate: boolean = true;
     private _extractedData: ElementData[][] = [];
@@ -64,7 +66,6 @@ class Grid implements GridType {
             entity,
             tileArray: [base, obj, entity],
             isTile,
-            //isWalkable: isTile && ((base && base.canWalkOver) && (obj && obj.canWalkOver) && (entity && entity.canWalkOver)) as boolean,
             isWalkable: isTile && isWalkable as boolean,
         } as Tile;
     }
@@ -93,7 +94,6 @@ class Grid implements GridType {
         // change the pattern data
         const index = pos.y * this.w + pos.x;
         if (index >= 0 && index < this._extractedData.length) {
-
             this.p = this.getPattern();
         }
     }
@@ -116,7 +116,7 @@ class Grid implements GridType {
         return newPattern;
     }
 
-    setPattern(newPattern: GridPattern, loadNow: boolean = false): void {
+    setPattern(newPattern: GridPattern, animate: boolean = this.animate, loadNow: boolean = true): void {
         //this.dispose();
         this.p = newPattern;
         this.p.forEach(e => {
@@ -129,13 +129,38 @@ class Grid implements GridType {
                 this._extractedData.push(patternToElementData(this.p[y][x]));
             }
         }
-        if(loadNow) this.loadGrid();
+        if(loadNow) this.loadGrid(animate);
     }
-        
 
-    loadGrid() {
+    savePattern(): void {
+        this.prevP.push(this.getPattern());
+        console.log(this.prevP);
+    }
+
+    rewindPattern(): void {
+        if(this.prevP.length === 0) return;
+        const lastPattern = this.prevP.pop();
+        if(!lastPattern) return;
+        this.setPattern(lastPattern, false);
+        this.game.moveCount--;
+        this.game._setMovesRemaning();
+        console.log(this.prevP);
+    }
+
+    resetPattern(): void {
+        if(this.prevP.length === 0) return;
+        const firstPattern = this.prevP[0];
+        this.prevP = [];
+        this.setPattern(firstPattern, true);
+        this.game.moveCount = 0;
+        this.game._setMovesRemaning();
+    }
+
+    loadGrid(animate: boolean): void {
         if(this.gEl === null) return;
-        this.bases, this.objects, this.entities = [];
+        this.bases = [];
+        this.objects = [];
+        this.entities = [];
         this.gEl.innerHTML = ''; // Clear previous elements if any
         this.gEl.style.gridTemplate = `repeat(${this.h}, 1rem) / repeat(${this.w}, 1rem)`;
 
@@ -150,13 +175,18 @@ class Grid implements GridType {
                     entity: null
                 }
 
-                tileS.base = invokeSpriteFromType({pos: {x, y}, el: extEl[0], g: this, spawnDelay: this.animate ? 100 * counter : 0}, Base) as Base | null;
-                tileS.obj = invokeSpriteFromType({pos: {x, y}, el: extEl[1], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Obj) as Obj | null;
-                tileS.entity = invokeSpriteFromType({pos: {x, y}, el: extEl[2], g: this, spawnDelay: this.animate ? 100 * counter + 500 : 0}, Entity) as Entity | null;
+                const spawnDelay = animate ? 100 * counter + (animate ? 500 : 0) : 0;
+                const animationName = animate ? 'drop-animation' : 'no-animations';
+
+                tileS.base = invokeSpriteFromType({pos: {x, y}, el: extEl[0], g: this, spawnDelay, animationName}, Base) as Base | null;
+                tileS.obj = invokeSpriteFromType({pos: {x, y}, el: extEl[1], g: this, spawnDelay, animationName}, Obj) as Obj | null;
+                tileS.entity = invokeSpriteFromType({pos: {x, y}, el: extEl[2], g: this, spawnDelay, animationName}, Entity) as Entity | null;
 
                 tileS.base ? this.bases.push(tileS.base) : null;
                 tileS.obj ? this.objects.push(tileS.obj) : null;
                 tileS.entity ? this.entities.push(tileS.entity) : null;
+
+                //this.sprites.push(...[tileS.base, tileS.obj, tileS.entity].filter(e => e !== null) as Sprite[]);
 
                 counter++;
             }
@@ -164,6 +194,8 @@ class Grid implements GridType {
     }
 
     keyEvent(_e: KeyboardEvent, _dir: Direction) {
+        this.savePattern();
+
         if(_e.key === 'k') {
             console.log(this.p)
         }
@@ -179,6 +211,9 @@ class Grid implements GridType {
             }
         }
 
+        this.game.moveCount++;
+        this.game.uiEl.querySelector('.moves-remaning')!.textContent = this.game.maxMoves ? String(this.game.maxMoves - this.game.moveCount) : '∞';
+        if(this.game.maxMoves && this.game.maxMoves - this.game.moveCount === 0) this.game.changeStatus('levelFailed');
         if(this.allTilesPainted()) this.game.changeStatus('levelComplete');
     }
 
@@ -190,6 +225,12 @@ class Grid implements GridType {
 
         this.gEl.style.setProperty('--rotX', (mousePos.y * 20) + 'deg');
         this.gEl.style.setProperty('--rotZ', (mousePos.x * 20) + 'deg');
+    }
+
+    clickEvent(_e: MouseEvent) {
+        if(this.game.status === 'levelComplete') {
+            this.game.loadNextLevel();
+        }
     }
 
     allTilesPainted(): boolean {

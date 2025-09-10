@@ -88,7 +88,7 @@ class Sprite {
             rotateZ(var(--rotationZ))
             rotateX(var(--rotationX))`;
         void this.div.offsetWidth;
-        this.div.style.transition = 'all 0.3s ease-in-out';
+        this.div.style.transition = 'transform 0.3s ease-in-out';
 
         //this.g.setTileAt(newPos, this)
         //console.log(this)
@@ -124,6 +124,10 @@ class Sprite {
     /* update() {
         this.div.style.setProperty("--rotation", Math.atan2(this.pos.x + this.cameraPos.x, this.pos.y + this.cameraPos.y) + 'rad');
     } */
+
+    dispose() {
+        this.div?.remove();
+    }
 }
 
 export { Sprite };

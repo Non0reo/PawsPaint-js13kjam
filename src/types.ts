@@ -4,7 +4,7 @@ import type { Obj } from "./tiles/objects/core-object";
 
 type GridPattern = any[][];
 type Direction = 'U' | 'D' | 'L' | 'R';
-type GameStatus = 'init' | 'intro' | 'levelSelection' | 'inLevel' | 'levelComplete';
+type GameStatus = 'init' | 'intro' | 'levelSelection' | 'inLevel' | 'levelComplete' | 'levelFailed';
 type SpriteTypes = typeof Base | typeof Obj | typeof Entity;
 
 type Position = {

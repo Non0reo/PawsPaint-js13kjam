@@ -4,6 +4,7 @@ import { Levels } from "./game/levels";
 import { Cat } from "./tiles/entities/cat";
 
 import mainLevels from './levels/main.json' assert { type: 'json' };
+import { everyIn } from "./utils";
 
 
 class Game {
@@ -11,6 +12,10 @@ class Game {
     el: HTMLElement;
     grid: Grid | null = null;
     levels: Levels[] = [];
+    currentLevelIndex: number = 0;
+    currentLevelsID: string = 'main';
+    moveCount: number = 0;
+    maxMoves: number | null = null;
 
     levelEl: HTMLElement = document.querySelector('.level')!;
     uiEl: HTMLElement = document.querySelector('.ui')!;
@@ -19,6 +24,7 @@ class Game {
         // Game initialization code
         if(!el) throw new Error("Game element not found");
         this.el = el;
+        this.uiEl.querySelector('.follow-mouse')!.setAttribute('hidden', '');
         this.initGame();
     }
 
@@ -42,16 +48,46 @@ class Game {
             });
             if(dir === null) return;
 
-           this.grid!.keyEvent(e, dir as Direction);
+           if(this.status === 'inLevel') this.grid!.keyEvent(e, dir as Direction);
         });
 
         window.addEventListener('mousemove', (e) => {
             this.grid!.mouseEvent(e);
+            this._putDivToMouse(e);
         });
 
         window.addEventListener('mouseout', (e) => {
             this.grid!.mouseEvent(e);
         });
+
+        window.addEventListener('click', (e) => {
+            this.grid!.clickEvent(e);
+        });
+
+        /* this.uiEl.querySelector('.undo')!.addEventListener('click', () => {
+            this.grid?.rewindPattern();
+        });
+
+        this.uiEl.querySelector('.home')!.addEventListener('click', () => {
+            this.changeStatus('levelSelection');
+        });
+
+        this.uiEl.querySelector('.reset')!.addEventListener('click', () => {
+        }); */
+
+        console.log(this.uiEl.querySelector('.undo'));
+
+        (this.uiEl.querySelector('.undo') as HTMLElement).onclick = () => {
+            this.grid?.rewindPattern();
+        };
+
+        (this.uiEl.querySelector('.home') as HTMLElement).onclick = () => {
+            this.changeStatus('levelSelection');
+        };
+
+        (this.uiEl.querySelector('.reset') as HTMLElement).onclick = () =>  {
+            this.grid?.resetPattern();
+        };
     }
 
     loadLevels(jsonData: LevelsData) {
@@ -59,20 +95,33 @@ class Game {
     }
 
     loadLevel(levelsID: string, levelIndex: number) {
+        this.currentLevelIndex = levelIndex;
+        this.currentLevelsID = levelsID;
+        this.moveCount = 0;
         const level = this.levels.find(lv => lv.id  === levelsID)?.levelsData[levelIndex];
         if(!level) {
             console.error("Level not found");
             return;
         }
+        this.maxMoves = level.maxMoves ?? null;
         this.grid?.setPattern(level.pattern, true);
         this.uiEl.querySelector('.level-name')!.textContent = level.name;
         this.uiEl.querySelector('.level-description')!.textContent = level.description;
+        (this.uiEl.querySelector('.moves-remaning-div') as HTMLElement)!.hidden = this.maxMoves ? false : true;
+        this._setMovesRemaning();
         this.changeStatus('inLevel');
     }
 
+    loadNextLevel() {
+        this.currentLevelIndex++;
+        this.loadLevel(this.currentLevelsID, this.currentLevelIndex);
+        this.changeStatus('inLevel');
+        this.grid!.prevP = [];
+    }
 
     changeStatus(newStatus: GameStatus) {
         this.status = newStatus;
+        this.uiEl.querySelector('.follow-mouse')!.setAttribute('hidden', '');
         switch (newStatus) {
             case 'init':
                 // Init code
@@ -92,13 +141,23 @@ class Game {
             
             case 'levelComplete':
                 this.uiEl.setAttribute('visible', 'false');
-                for (const entity of this.grid!.entities) {
-                    if(entity instanceof Cat) {
-                        entity.setAnimation('joy-animation');
-                    }
-                }
+                this.uiEl.querySelector('.follow-mouse')!.removeAttribute('hidden');
+                everyIn(Cat, this.grid!.entities, (e) => e.setAnimation('joy-animation'));
                 break;
+                
+            case 'levelFailed':
+                everyIn(Cat, this.grid!.entities, (e) => e.setAnimation('sad-animation'));
         }
+    }
+
+    _putDivToMouse(e: MouseEvent) {
+        const div = this.uiEl.querySelector('.follow-mouse') as HTMLDivElement;
+        div.style.left = e.clientX + 'px';
+        div.style.top = e.clientY + 'px';
+    }
+
+    _setMovesRemaning() {
+        this.uiEl.querySelector('.moves-remaning')!.textContent = this.maxMoves ? String(this.maxMoves - this.moveCount) : '∞';
     }
 }
 

@@ -21,6 +21,7 @@
         {
             "name": "Beginning 3",
             "description": "Sometimes you have a maximum number of moves.",
+            "maxMoves": 13,
             "pattern": [
                 [0       , 0, 0, 0, 1],
                 ["1.1R.1", 1, 1, 1, 1],

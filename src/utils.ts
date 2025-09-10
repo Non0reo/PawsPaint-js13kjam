@@ -35,4 +35,13 @@ function elementDataToPattern(elementData: ElementData[], patternData?: string):
     return basePattern.join('.');
 }
 
-export { directionFromDelta, patternToElementData, elementDataToPattern };
+function everyIn(c: any, arr: any[], callback: (item: any) => void) {
+    for (const thing of arr) {
+        if(thing instanceof c) {
+            //thing.setAnimation('joy-animation');
+            callback(thing);
+        }
+    }
+}
+
+export { directionFromDelta, patternToElementData, elementDataToPattern, everyIn };

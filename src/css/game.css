@@ -1,6 +1,7 @@
 :root {
     font-size: 8em;
-    --black: #0f1939;
+    --black: #0C121F;
+    --dark-blue: #0f1939;
     --blue: #37507e;
     --white: #fdfbdf;
     --std-anim: cubic-bezier(0.33, 1, 0.66, 1);
@@ -14,7 +15,7 @@ body {
     background: 
         radial-gradient(circle at top left, #e3aa8764, transparent 50%),
         radial-gradient(circle at top right, #e3aa8764, transparent 50%),
-        radial-gradient(#37457b, var(--black));
+        radial-gradient(#37457b, var(--dark-blue));
     display: flex;
     width: 100dvw;
     height: 100dvh;
@@ -44,8 +45,10 @@ body {
     --sprite-z-offset: 0rem;
     --sprite-y-offset: 0rem;
 
+    width: 1rem;
+    height: 1rem;
     image-rendering: pixelated;
-    transition: all 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
     transform-origin: center bottom;
     transform:
         translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
@@ -67,6 +70,10 @@ body {
 
 .sprite[anim="joy-animation"] {
     animation: joy-dance 1s ease-in-out infinite;
+}
+
+.entity-cat[anim="sad-animation"] {
+    animation: sad 0.5s ease-out infinite alternate;
 }
 
 @keyframes apparition {
@@ -110,18 +117,31 @@ body {
     }
 }
 
+@keyframes sad {
+    0% {
+        transform:
+            translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+            rotateZ(var(--rotationZ))
+            rotateX(var(--rotationX))
+            scaleY(1);
+    }
+    100% {
+        transform:
+            translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+            rotateZ(var(--rotationZ))
+            rotateX(var(--rotationX))
+            scaleY(1.2);
+    }
+}
+
 
 /* TILES BASE */
 
 .nonwalkable {
-    width: 1rem;
-    height: 1rem;
     background-color: var(--black);
 }
 
 .walkable {
-    width: 1rem;
-    height: 1rem;
     /* background-color: var(--white); */
     background: url("/sprites/floor.webp");
     background-size: cover;
@@ -133,8 +153,6 @@ body {
 /* OBJS */
 
 .obj {
-    width: 1rem;
-    height: 1rem;
     z-index: 10;
     background-image: url("/sprites/objects.webp");
     background-size: 4rem;
@@ -164,12 +182,11 @@ body {
 /* ENTITIES */
 
 .entity-cat {
-    width: 1rem;
-    height: 1rem;
     background-image: url("/sprites/cat.webp");
     position: relative;
     background-size: 3rem;
     background-position: bottom left 0%;
+    background-repeat: no-repeat;
     image-rendering: pixelated;
     z-index: 20;
     /* transform:
@@ -179,4 +196,12 @@ body {
         rotateX(var(--rotationX)) */
         /* translate3d(0rem, 0rem, 0rem); */
         /* translate(2rem, 0rem); */
+}
+
+.entity-cat[anim="joy-animation"] {
+    background-position: 100% 100%;
+}
+
+.entity-cat[anim="sad-animation"] {
+    background-position: 50% 100%;
 }

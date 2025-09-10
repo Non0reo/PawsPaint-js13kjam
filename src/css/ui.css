@@ -4,6 +4,8 @@ span, h1, h2, h3, p {
     font-family: monospace;
 }
 
+[hidden] { display: none !important; }
+
 .ui {
     position: fixed;
     top: 0;
@@ -37,6 +39,7 @@ header {
     display: flex;
     gap: 0.5rem;
     justify-content: center;
+    align-items: center;
     transition: transform 1s cubic-bezier(0.33, 1, 0.66, 1);
 }
 
@@ -44,7 +47,15 @@ header {
     transform: translateY(-1rem);
 }
 
-header > button {
+header div {
+    height: min-content;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 1.5rem;
+}
+
+header button {
     width: 0.5rem;
     height: 0.5rem;
     background: url('/sprites/ui.webp') no-repeat;
@@ -57,23 +68,37 @@ header > button {
     transition: all 0.1s var(--std-anim);
 }
 
-header > button:hover {
+header button:hover {
     border-radius: 20%;
 }
 
-header > button:active {
+header button:active {
     outline: 4px var(--blue) inset;
 }
 
-.btn-undo {
+.moves-remaning-div {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 1.5rem;
+}
+
+.moves-remaning-div .sprite {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-size: 2rem;
+    background-position: 0 100%;
+}
+
+.btn.undo {
     background-position: 0 0;
 }
 
-.btn-home {
+.btn.home {
     background-position: 50% 0;
 }
 
-.btn-reset {
+.btn.reset {
     background-position: 100% 0rem;
 }
 
@@ -100,17 +125,18 @@ footer {
     scale: 0.5;
 }
 
-.arrow, .arrow::after {
-    width: 1rem;
-    height: 1rem;
+.arrow {
+    --size: 1rem;
+    width: var(--size);
+    height: var(--size);
     background: url('/sprites/ui.webp') no-repeat;
-    background-size: 3rem;
+    background-size: calc(var(--size) * 3);
     image-rendering: pixelated;
     display: block;
     background-position: 0% 100%;
 }
 
-.arrow::after {
+.arrow::after, .follow-mouse div {
     content: "";
     background-position: 50% 100%;
 }
@@ -126,3 +152,50 @@ footer {
 
 .arrow:nth-child(4) { grid-area: r; }
 .arrow:nth-child(4)::after { transform: rotate(90deg); }
+
+
+
+
+.screen-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    pointer-events: none;
+    
+}
+
+.follow-mouse {
+    display: flex;
+    gap: 0.1rem;
+    position: absolute;
+    translate: -50% -50%;
+    padding: 0.1rem;
+    background-color: var(--black);
+    border: 5px solid var(--white);
+    border-radius: 10px;
+    opacity: 1;
+    animation: 
+        infinite alternate wiggle 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+    cursor: pointer;
+}
+
+.follow-mouse div {
+    --size: 0.2rem;
+    rotate: 90deg;
+    /* width: 0.2rem;
+    height: 0.2rem;
+    image-rendering: pixelated;
+    background: url('/sprites/ui.webp') no-repeat;
+    background-size: 0.6rem;
+    background-position: 50% 100%;
+    rotate: 90deg; */
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(-5deg); }
+    100% { transform: rotate(5deg); }
+    
+}

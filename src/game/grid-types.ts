@@ -7,6 +7,7 @@ import type { Position, Tile } from "../types";
 interface GridType {
     getTileAt(pos: Position): Tile;
     setTileAt(pos: Position, sprite: Sprite): void;
+    savePattern(): void;
     w: number;
     h: number;
     p: number[][];
