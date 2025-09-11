@@ -44,4 +44,14 @@ function everyIn(c: any, arr: any[], callback: (item: any) => void) {
     }
 }
 
-export { directionFromDelta, patternToElementData, elementDataToPattern, everyIn };
+function dirToDegrees(dir: Direction): number {
+    switch(dir) {
+        case 'U': return 0;
+        case 'R': return 90;
+        case 'D': return 180;
+        case 'L': return 270;
+        default: return 0;
+    }
+}
+
+export { directionFromDelta, patternToElementData, elementDataToPattern, everyIn, dirToDegrees };

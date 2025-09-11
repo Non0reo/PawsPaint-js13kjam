@@ -1,6 +1,6 @@
 import type { Direction, GameStatus, LevelsData } from "./types";
 import { Grid } from "./game/grid";
-import { Levels } from "./game/levels";
+import { Level, Levels } from "./game/levels";
 import { Cat } from "./tiles/entities/cat";
 
 import mainLevels from './levels/main.json' assert { type: 'json' };
@@ -12,6 +12,7 @@ class Game {
     el: HTMLElement;
     grid: Grid | null = null;
     levels: Levels[] = [];
+    currentLevel: Level | null = null;
     currentLevelIndex: number = 0;
     currentLevelsID: string = 'main';
     moveCount: number = 0;
@@ -78,7 +79,7 @@ class Game {
         console.log(this.uiEl.querySelector('.undo'));
 
         (this.uiEl.querySelector('.undo') as HTMLElement).onclick = () => {
-            this.grid?.rewindPattern();
+            this.grid?.rewindLevel();
         };
 
         (this.uiEl.querySelector('.home') as HTMLElement).onclick = () => {
@@ -86,7 +87,7 @@ class Game {
         };
 
         (this.uiEl.querySelector('.reset') as HTMLElement).onclick = () =>  {
-            this.grid?.resetPattern();
+            this.grid?.resetLevel();
         };
     }
 
@@ -94,15 +95,17 @@ class Game {
         this.levels.push(new Levels(jsonData));
     }
 
-    loadLevel(levelsID: string, levelIndex: number) {
-        this.currentLevelIndex = levelIndex;
-        this.currentLevelsID = levelsID;
+    loadLevel(levelsID: string, levelIndex: number) {        
         this.moveCount = 0;
         const level = this.levels.find(lv => lv.id  === levelsID)?.levelsData[levelIndex];
         if(!level) {
             console.error("Level not found");
             return;
         }
+        
+        this.currentLevel = {...level, moveCount: 0};
+        this.currentLevelIndex = levelIndex;
+        this.currentLevelsID = levelsID;
         this.maxMoves = level.maxMoves ?? null;
         this.grid?.setPattern(level.pattern, true);
         this.uiEl.querySelector('.level-name')!.textContent = level.name;
@@ -116,7 +119,7 @@ class Game {
         this.currentLevelIndex++;
         this.loadLevel(this.currentLevelsID, this.currentLevelIndex);
         this.changeStatus('inLevel');
-        this.grid!.prevP = [];
+        this.grid!.prevL = [];
     }
 
     changeStatus(newStatus: GameStatus) {

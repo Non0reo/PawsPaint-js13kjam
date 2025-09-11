@@ -40,8 +40,10 @@ body {
 /* Common */
 
 .sprite {
-    --rotationZ: 0;
-    --rotationX: 0;
+    --rotX: 0;
+    --rotY: 0;
+    --rotZ: 0;
+    
     --sprite-z-offset: 0rem;
     --sprite-y-offset: 0rem;
 
@@ -52,8 +54,9 @@ body {
     transform-origin: center bottom;
     transform:
         translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-        rotateZ(var(--rotationZ))
-        rotateX(var(--rotationX));
+        rotateY(var(--rotY))
+        rotateZ(var(--rotZ))
+        rotateX(var(--rotX));
 }
 
 .sprite[anim="no-animation"] {
@@ -82,16 +85,16 @@ body {
         scale: 0;
         transform:
             translate3d(0, var(--sprite-y-offset), calc(var(--sprite-z-offset) + 5rem))
-            rotateZ(var(--rotationZ))
-            rotateX(var(--rotationX));
+            rotateZ(var(--rotZ))
+            rotateX(var(--rotX));
     }
     100% {
         opacity: 1;
         scale: 1;
         transform:
             translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-            rotateZ(var(--rotationZ))
-            rotateX(var(--rotationX));
+            rotateZ(var(--rotZ))
+            rotateX(var(--rotX));
     }
 }
 
@@ -104,15 +107,15 @@ body {
     0%, 100% {
         transform:
             translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-            rotateZ(var(--rotationZ))
-            rotateX(var(--rotationX))
+            rotateZ(var(--rotZ))
+            rotateX(var(--rotX))
             skewX(-10deg);
     }
     50% {
         transform:
             translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-            rotateZ(var(--rotationZ))
-            rotateX(var(--rotationX))
+            rotateZ(var(--rotZ))
+            rotateX(var(--rotX))
             skewX(10deg);
     }
 }
@@ -121,15 +124,15 @@ body {
     0% {
         transform:
             translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-            rotateZ(var(--rotationZ))
-            rotateX(var(--rotationX))
+            rotateZ(var(--rotZ))
+            rotateX(var(--rotX))
             scaleY(1);
     }
     100% {
         transform:
             translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-            rotateZ(var(--rotationZ))
-            rotateX(var(--rotationX))
+            rotateZ(var(--rotZ))
+            rotateX(var(--rotX))
             scaleY(1.2);
     }
 }
@@ -192,8 +195,8 @@ body {
     /* transform:
         translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
         translate(0rem, 0rem)
-        rotateZ(var(--rotationZ))
-        rotateX(var(--rotationX)) */
+        rotateZ(var(--rotZ))
+        rotateX(var(--rotX)) */
         /* translate3d(0rem, 0rem, 0rem); */
         /* translate(2rem, 0rem); */
 }

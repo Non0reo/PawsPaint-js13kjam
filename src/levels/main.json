@@ -5,22 +5,40 @@
     "levels": [
         {
             "name": "Beginning 1",
-            "description": "Walk on every tiles to paint them.",
+            "description": "There once was a cat who needed to walk on every tiles to paint them.",
             "pattern": [
                 ["1.1R.1", 1, 1, 1, 1]
             ]
         },
         {
             "name": "Beginning 2",
-            "description": "You can walk up, down, left and right.",
+            "description": "He was able to walk up, down, left and right.",
+            "pattern": [
+                [1       , 1, 1, 0, 1],
+                [1       , 0, 1, 0, 1],
+                ["1.1R.1", 0, 1, 1, 1]
+            ]
+        },
+        {
+            "name": "Beginning 3",
+            "description": "A big cataclysm happened, removing color from the world.",
             "pattern": [
                 [0       , 1, 1, 0, 1],
                 ["1.1R.1", 1, 1, 1, 1]
             ]
         },
         {
-            "name": "Beginning 3",
-            "description": "Sometimes you have a maximum number of moves.",
+            "name": "Beginning 4",
+            "description": "That's why he decided to repaint everything by himself!",
+            "pattern": [
+                [1, 1, 1, 0, "1.1R.1"],
+                [1, 1, 1, 1, 1],
+                [1, 0, 1, 1, 0]
+            ]
+        },
+        {
+            "name": "Beginning 5",
+            "description": "Sometimes, he had a maximum number of moves.",
             "maxMoves": 13,
             "pattern": [
                 [0       , 0, 0, 0, 1],

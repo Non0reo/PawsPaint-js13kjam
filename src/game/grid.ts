@@ -12,6 +12,7 @@ import { Paint } from "../tiles/objects/paint";
 import { invokeSpriteFromType } from "../tiles/tile";
 import { elementDataToPattern, patternToElementData } from "../utils";
 import type { Game } from "../game";
+import type { Level } from "./levels";
 
 class Grid implements GridType {
     game: Game;
@@ -20,7 +21,7 @@ class Grid implements GridType {
     objects: Obj[] = [];
     entities: Entity[] = [];
     //sprites: Sprite[] = [];
-    prevP: GridPattern = [];
+    prevL: Level[] = [];
     gEl: HTMLElement;
     animate: boolean = true;
     private _extractedData: ElementData[][] = [];
@@ -133,27 +134,33 @@ class Grid implements GridType {
     }
 
     savePattern(): void {
-        this.prevP.push(this.getPattern());
-        console.log(this.prevP);
+        if(!this.game.currentLevel) return;
+        this.game.currentLevel = {
+            ...this.game.currentLevel!,
+            pattern: this.getPattern(),
+            moveCount: this.game.moveCount
+        };
+        this.prevL.push(this.game.currentLevel);
     }
 
-    rewindPattern(): void {
-        if(this.prevP.length === 0) return;
-        const lastPattern = this.prevP.pop();
-        if(!lastPattern) return;
-        this.setPattern(lastPattern, false);
-        this.game.moveCount--;
+    _goBackToLevel(l?: Level): void {
+        if(!l) return;
+        this.setPattern(l.pattern, false);
+        this.game.moveCount = l.moveCount;
+        if(l.maxMoves && l.maxMoves - l.moveCount > 0) this.game.status = 'inLevel';
         this.game._setMovesRemaning();
-        console.log(this.prevP);
+        console.log(l, this.game);
     }
 
-    resetPattern(): void {
-        if(this.prevP.length === 0) return;
-        const firstPattern = this.prevP[0];
-        this.prevP = [];
-        this.setPattern(firstPattern, true);
-        this.game.moveCount = 0;
-        this.game._setMovesRemaning();
+    rewindLevel(): void {
+        if(this.prevL.length === 0) return;
+        this._goBackToLevel(this.prevL.pop())
+    }
+
+    resetLevel(): void {
+        if(this.prevL.length === 0) return;
+        this._goBackToLevel(this.prevL[0]);
+        this.prevL = [];
     }
 
     loadGrid(animate: boolean): void {
@@ -211,9 +218,9 @@ class Grid implements GridType {
             }
         }
 
-        this.game.moveCount++;
-        this.game.uiEl.querySelector('.moves-remaning')!.textContent = this.game.maxMoves ? String(this.game.maxMoves - this.game.moveCount) : '∞';
-        if(this.game.maxMoves && this.game.maxMoves - this.game.moveCount === 0) this.game.changeStatus('levelFailed');
+        // this.game.moveCount++;
+        // this.game.uiEl.querySelector('.moves-remaning')!.textContent = this.game.maxMoves ? String(this.game.maxMoves - this.game.moveCount) : '∞';
+        // if(this.game.maxMoves && this.game.maxMoves - this.game.moveCount === 0) this.game.changeStatus('levelFailed');
         if(this.allTilesPainted()) this.game.changeStatus('levelComplete');
     }
 

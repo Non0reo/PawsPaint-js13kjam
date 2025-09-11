@@ -1,3 +1,4 @@
+import type { Game } from "../game";
 import type { Base } from "../tiles/base/core-base";
 import type { Entity } from "../tiles/entities/core-entity";
 import type { Obj } from "../tiles/objects/core-object";
@@ -15,6 +16,7 @@ interface GridType {
     objects: Obj[];
     entities: Entity[];
     gEl: HTMLElement | null;
+    game: Game;
 }
 
 export type { GridType };

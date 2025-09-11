@@ -1,5 +1,6 @@
 import type { Direction, Position, SpriteParams } from "../../types";
 import { patternToElementData } from "../../utils";
+import { Bucket } from "../objects/bucket";
 import { Paint } from "../objects/paint";
 import { Entity } from "./core-entity";
 
@@ -43,13 +44,28 @@ class Cat extends Entity {
             animationName: 'fade-animation'
         }));
 
-        /* this.setAnimation('no-animation'); */
+        
+        // Checks tiles all around for Buckets, and if found, triggers their action
+        const directions: Position[] = [
+            {x: 0, y: -1}, // Up
+            {x: 1, y: 0},  // Right
+            {x: 0, y: 1},  // Down
+            {x: -1, y: 0}  // Left
+        ];
+        directions.forEach(dir => {
+            const checkPos: Position = {x: _pos.x + dir.x, y: _pos.y + dir.y};
+            const checkTile = this.g.getTileAt(checkPos);
+            //_dirDelta is the direction from the cat to the bucket
+            const _dirDelta = dir.x === 1 ? 'R' : dir.x === -1 ? 'L' : dir.y === 1 ? 'D' : 'U';
+            if (checkTile.obj && checkTile.obj instanceof Bucket) {
+                checkTile.obj.passingBy(checkPos, _dirDelta);
+            }
+        });
     }
 
     hasChangedPosition(_pos: Position | null, _dir: Direction | null): void {
         if(!_pos || !_dir) return;
-        this.g.setTileAt(_pos, this)
-        //console.log("Cat moved to", this.pos);
+        this.g.setTileAt(_pos, this);
     }
 }
 
