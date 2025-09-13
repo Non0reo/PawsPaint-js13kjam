@@ -1,4 +1,4 @@
-import type { Direction, ElementData } from "./types";
+import type { Direction, ElementData, Position } from "./types";
 
 function directionFromDelta(deltaX: number, deltaY: number): Direction | null {
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -54,4 +54,14 @@ function dirToDegrees(dir: Direction): number {
     }
 }
 
-export { directionFromDelta, patternToElementData, elementDataToPattern, everyIn, dirToDegrees };
+function dirToPosVector(dir: Direction): Position {
+    switch(dir) {
+        case 'U': return {x: 0, y: -1};
+        case 'R': return {x: 1, y: 0};
+        case 'D': return {x: 0, y: 1};
+        case 'L': return {x: -1, y: 0};
+        default: return {x: 0, y: 0};
+    }
+}
+
+export { directionFromDelta, patternToElementData, elementDataToPattern, everyIn, dirToDegrees, dirToPosVector };

@@ -31,6 +31,11 @@ class Base extends Sprite {
     chkBorder(dx: number, dy: number): boolean {
         return this.chkNear(dx, 0) || this.chkNear(0, dy);
     }
+
+    removeElement(): void {
+        this.g.bases = this.g.bases.filter(e => e.id !== this.id);
+        this.dispose();
+    }
 }
 
 export { Base };

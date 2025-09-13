@@ -47,7 +47,7 @@ type LevelsData = {
 
 type LevelData = {
     name: string;
-    description: string;
+    description?: string;
     maxMoves?: number;
     minMoves?: number;
     exactMoves?: number;

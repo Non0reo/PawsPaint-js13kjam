@@ -12,6 +12,11 @@ class Entity extends Sprite {
         this.div.classList.add("entity");
         this.g.gEl?.appendChild(this.div);
     }
+
+    removeElement(): void {
+        this.g.entities = this.g.entities.filter(e => e.id !== this.id);
+        this.dispose();
+    }
 }
 
 export { Entity };

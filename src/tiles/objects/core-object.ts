@@ -11,6 +11,11 @@ class Obj extends Sprite {
         this.div.classList.add("obj");
         this.g.gEl?.appendChild(this.div);
     }
+
+    removeElement(): void {
+        this.g.objects = this.g.objects.filter(e => e.id !== this.id);
+        this.dispose();
+    }
 }
 
 export { Obj };

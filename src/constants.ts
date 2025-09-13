@@ -10,7 +10,8 @@ const getObjectName = new Map<number, string>([
     [3, 'Soap'],
     [4, 'Bucket'],
     [5, 'Puddle'],
-    [6, 'Ladyline']
+    [6, 'Ladyline'],
+    [7, 'EmptyBucket']
 ]);
 
 const getEntityName = new Map<number, string>([

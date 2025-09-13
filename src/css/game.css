@@ -79,6 +79,90 @@ body {
     animation: sad 0.5s ease-out infinite alternate;
 }
 
+
+/* TILES BASE */
+
+.nonwalkable {
+    background-color: var(--black);
+}
+
+.walkable {
+    /* background-color: var(--white); */
+    background: url("/sprites/floor.webp");
+    background-size: cover;
+    image-rendering: pixelated;
+    
+    z-index: -10;
+}
+
+/* OBJS */
+
+.obj {
+    z-index: 10;
+    background-image: url("/sprites/objects.webp");
+    background-size: 4rem;
+}
+
+.obj-paint {
+    background-position: 0rem 1rem;
+}
+
+.obj-yarn {
+    background-position: -3rem 1rem;
+}
+
+.obj-soap {
+    background-position: -2rem 1rem;
+}
+
+.obj-puddle {
+    background-position: -1rem 1rem;
+}
+
+.obj-bucket {
+    background-position: -0rem 2rem;
+}
+
+.obj-empty-bucket {
+    background-position: -1rem 2rem;
+}
+
+
+.obj-puddle[anim="spread-animation"] {
+    animation: puddle-spread 1s ease-in-out;
+}
+
+/* ENTITIES */
+
+.entity-cat {
+    background-image: url("/sprites/cat.webp");
+    position: relative;
+    background-size: 3rem;
+    background-position: bottom left 0%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    z-index: 20;
+    /* transform:
+        translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
+        translate(0rem, 0rem)
+        rotateZ(var(--rotZ))
+        rotateX(var(--rotX)) */
+        /* translate3d(0rem, 0rem, 0rem); */
+        /* translate(2rem, 0rem); */
+}
+
+.entity-cat[anim="joy-animation"] {
+    background-position: 100% 100%;
+}
+
+.entity-cat[anim="sad-animation"] {
+    background-position: 50% 100%;
+}
+
+
+
+/* ANIMATIONS */
+
 @keyframes apparition {
     0% {
         opacity: 0;
@@ -137,74 +221,17 @@ body {
     }
 }
 
-
-/* TILES BASE */
-
-.nonwalkable {
-    background-color: var(--black);
-}
-
-.walkable {
-    /* background-color: var(--white); */
-    background: url("/sprites/floor.webp");
-    background-size: cover;
-    image-rendering: pixelated;
+@keyframes puddle-spread {
+    0% {
+        scale: 0;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        scale: 1;
+        opacity: 0;
+    }
     
-    z-index: -10;
-}
-
-/* OBJS */
-
-.obj {
-    z-index: 10;
-    background-image: url("/sprites/objects.webp");
-    background-size: 4rem;
-}
-
-.obj-paint {
-    background-position: 0rem 1rem;
-}
-
-.obj-yarn {
-    background-position: -3rem 1rem;
-}
-
-.obj-soap {
-    background-position: -2rem 1rem;
-}
-
-.obj-puddle {
-    background-position: -1rem 1rem;
-}
-
-.obj-bucket {
-    background-position: -0rem 2rem;
-}
-
-
-/* ENTITIES */
-
-.entity-cat {
-    background-image: url("/sprites/cat.webp");
-    position: relative;
-    background-size: 3rem;
-    background-position: bottom left 0%;
-    background-repeat: no-repeat;
-    image-rendering: pixelated;
-    z-index: 20;
-    /* transform:
-        translate3d(0, var(--sprite-y-offset), var(--sprite-z-offset))
-        translate(0rem, 0rem)
-        rotateZ(var(--rotZ))
-        rotateX(var(--rotX)) */
-        /* translate3d(0rem, 0rem, 0rem); */
-        /* translate(2rem, 0rem); */
-}
-
-.entity-cat[anim="joy-animation"] {
-    background-position: 100% 100%;
-}
-
-.entity-cat[anim="sad-animation"] {
-    background-position: 50% 100%;
 }

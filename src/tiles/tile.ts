@@ -13,6 +13,7 @@ import { Paint } from "./objects/paint";
 import { Puddle } from "./objects/puddle";
 import { Soap } from "./objects/soap";
 import { Yarn } from "./objects/yarn";
+import { EmptyBucket } from "./objects/empty-bucket";
 
 import { getBaseName, getObjectName, getEntityName } from "../constants";
 
@@ -33,6 +34,7 @@ function invokeSpriteFromType(opts: SpriteParams, spriteType: SpriteTypes): Base
         Yarn: Yarn,
         Soap: Soap,
         Bucket: Bucket,
+        EmptyBucket: EmptyBucket,
         Puddle: Puddle,
         Ladyline: Ladyline,
         Cat: Cat,

@@ -29,7 +29,7 @@ class Level {
         this.index = index;
         this.levelData = levelData;
         this.name = levelData.name;
-        this.description = levelData.description;
+        this.description = levelData.description || "";
         this.pattern = levelData.pattern;
         if(levelData.maxMoves) this.maxMoves = levelData.maxMoves;
     }
